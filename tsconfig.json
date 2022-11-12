@@ -1,5 +1,14 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/apollo/*": ["apollo/*"],
+      "@/components/*": ["components/*"],
+      "@/graphql/*": ["graphql/*"],
+      "@/fragments/*": ["graphql/fragments/*"],
+      "@/types/*": ["graphql/types/*"],
+      "@/lib/*": ["lib/*"]
+    },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -15,6 +24,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "typings", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
