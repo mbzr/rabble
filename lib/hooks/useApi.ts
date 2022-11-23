@@ -4,7 +4,7 @@ export type Method = 'GET' | 'POST'
 export type Result = {
   ok: boolean
   status: number
-  result: string | object | null | boolean
+  result: any
 }
 
 const callApi = async (
@@ -24,7 +24,7 @@ const callApi = async (
     requestOptions.body = typeof body === 'string' ? body : JSON.stringify(body)
   }
 
-  const request = await fetch(endpoint, requestOptions)
+  const request = await fetch(`/api${endpoint}`, requestOptions)
 
   return {
     ok: request.ok,
@@ -48,6 +48,11 @@ const useApi = () => {
     } else {
       setStatus('error')
     }
+
+    if (response.result?.error) {
+      throw new Error(response.result?.error)
+    }
+
     return response.result
   }
 

@@ -1,6 +1,6 @@
-import AuthForm from '@/components/forms/authForm'
 import React from 'react'
 import Modal from 'react-modal'
+import SignupForm from '../forms/signupForm'
 
 import ModalContainer from './modalContainer'
 import { useModal } from './modalContext'
@@ -24,7 +24,7 @@ const SignupModal = () => {
       closeTimeoutMS={330}
     >
       <ModalContainer title="Signup Modal">
-        <AuthForm type="signup" />
+        <SignupForm />
       </ModalContainer>
     </Modal>
   )

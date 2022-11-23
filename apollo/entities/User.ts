@@ -53,7 +53,7 @@ const User = gql`
     modifiedAt: Date
     lastLoginAt: Date
     bannedAt: Date
-    timezone: Int
+    timezone: String
     password: String
     passwordUpdatedAt: Date
     role: Role

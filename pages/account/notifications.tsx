@@ -16,6 +16,14 @@ const NotificationsPage: NextPage<{}> = () => {
   if (data?.user) {
     return (
       <Layout>
+        {error && (
+          <pre>
+            Bad:{' '}
+            {error.graphQLErrors.map(({ message }, i) => (
+              <span key={i}>{message}</span>
+            ))}
+          </pre>
+        )}
         <NotificationsForm user={data.user} />
       </Layout>
     )

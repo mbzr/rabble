@@ -6,14 +6,14 @@ import { processRequest } from 'graphql-upload'
 
 import { schema } from '@/apollo/schema'
 import { __PROD__ } from '@/lib/constants'
-import { getSessionUser } from '@/lib/auth/session'
+import { getServerSession } from '@/lib/auth/session'
 
 const apolloServer = new ApolloServer({
   schema,
   debug: true,
   introspection: true,
   context: async (ctx) => {
-    const user = await getSessionUser(ctx)
+    const user = await getServerSession(ctx)
 
     // if (!user) {
     //   throw new Error('Unauthorized. You must be logged in.')

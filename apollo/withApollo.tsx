@@ -12,7 +12,7 @@ import { createUploadLink } from 'apollo-upload-client'
 import { onError } from '@apollo/client/link/error'
 
 import { schema } from '@/apollo/schema'
-import { getSessionUser } from '@/lib/auth/session'
+import { getServerSession } from '@/lib/auth/session'
 
 interface NextPageContextProps extends NextPageContext {
   user: any
@@ -115,15 +115,17 @@ export const withApollo =
     if (ssr || PageComponent.getInitialProps) {
       WithApollo.getInitialProps = async (ctx: NextPageContextProps) => {
         const { AppTree } = ctx
+
+        // this will run on server side only
+        const session = await getServerSession(ctx)
+
         // Initialize ApolloClient, add it to the ctx object so
         // we can use it in `PageComponent.getInitialProps`.
-        const user = await getSessionUser(ctx)
-
         const apolloClient = (ctx.apolloClient = initApolloClient(
           null as unknown as NormalizedCacheObject,
           {
             ...ctx,
-            user,
+            user: session ? session.user : null,
           }
         ))
 
