@@ -1,5 +1,6 @@
 declare namespace NodeJS {
   export interface ProcessEnv {
-    SESSION_SECRET: string
+    NEXTAUTH_URL: string
+    NEXTAUTH_SECRET: string
   }
 }

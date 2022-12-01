@@ -1,22 +1,25 @@
 import React from 'react'
+import styled from 'styled-components'
 
 import Header from '@/components/header'
 import Footer from '@/components/footer'
 import Head from '@/components/head'
-import { StyledLayout } from './style'
 import { ModalProvider, ModalRoot } from '@/components/modals/modalContext'
 
 interface LayoutProps {
   children: React.ReactNode
+  noHeader?: boolean
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+export const StyledLayout = styled.main``
+
+const Layout: React.FC<LayoutProps> = ({ children, noHeader }) => {
   return (
     <StyledLayout>
       <Head title="Rabble App" />
 
       <ModalProvider>
-        <Header />
+        {noHeader ? null : <Header />}
         <ModalRoot />
         {children}
       </ModalProvider>

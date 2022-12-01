@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import { signOut } from 'next-auth/react'
 import { useApolloClient } from '@apollo/client'
 
 import { Container } from '@/components/globals'
@@ -7,18 +8,14 @@ import Logo from '@/components/logo'
 import { PrimaryButton } from '@/components/button'
 import useCurrentUser from '@/apollo/client/queries/user/useCurrentUser'
 import { StyledHeader, Inner, SideButtons, LoginAnchor } from './style'
-import { useModal } from '../modals/modalContext'
-import useApi from '@/lib/hooks/useApi'
 
 const Header: React.FC<{}> = () => {
   const client = useApolloClient()
   const { data, loading } = useCurrentUser()
-  const { dispatch } = useModal()
-  const [, callApi] = useApi()
 
   const handleLogout = async () => {
     try {
-      await callApi('/api/auth/logout')
+      await signOut()
 
       client.clearStore().then(() => {
         window.location.href = '/'
@@ -45,20 +42,8 @@ const Header: React.FC<{}> = () => {
               </>
             ) : (
               <>
-                <LoginAnchor
-                  onClick={() =>
-                    dispatch({ type: 'OPEN_MODAL', modalType: 'LOGIN_MODAL' })
-                  }
-                >
-                  Login
-                </LoginAnchor>
-                <PrimaryButton
-                  onClick={() =>
-                    dispatch({ type: 'OPEN_MODAL', modalType: 'SIGNUP_MODAL' })
-                  }
-                >
-                  Sign up
-                </PrimaryButton>
+                <LoginAnchor href="/login">Login</LoginAnchor>
+                <PrimaryButton to="/signup">Sign up</PrimaryButton>
               </>
             )}
           </SideButtons>

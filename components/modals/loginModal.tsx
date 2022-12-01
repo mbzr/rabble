@@ -1,6 +1,6 @@
-import AuthForm from '@/components/forms/authForm'
 import React from 'react'
 import Modal from 'react-modal'
+import LoginForm from '../forms/loginForm'
 
 import ModalContainer from './modalContainer'
 import { useModal } from './modalContext'
@@ -24,7 +24,7 @@ const LoginModal = () => {
       closeTimeoutMS={330}
     >
       <ModalContainer title="Login Modal">
-        <AuthForm type="login" />
+        <LoginForm />
       </ModalContainer>
     </Modal>
   )

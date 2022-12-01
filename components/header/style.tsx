@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 import theme from '@/lib/theme'
+import Link from 'next/link'
 
 export const StyledHeader = styled.header`
   background-color: ${theme.colors.brand.dark};
@@ -22,7 +23,7 @@ export const SideButtons = styled.div`
   gap: 15px;
 `
 
-export const LoginAnchor = styled.button`
+export const LoginAnchor = styled(Link)`
   background: none;
   border: none;
   box-shadow: 0 0 0 transparent;

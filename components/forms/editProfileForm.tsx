@@ -13,8 +13,8 @@ interface Props {
 }
 
 interface FormValues {
-  displayName: string
-  email: string
+  displayName?: string
+  email?: string
   file?: File
 }
 
@@ -77,10 +77,19 @@ const EditProfileForm: React.FC<Props> = ({ user }) => {
     try {
       setSubmitting(true)
 
-      // console.log('values', values)
+      let payload = values
+
+      if (values.email === initialValues.email) {
+        const { email, ...restValues } = values
+        payload = {
+          ...restValues,
+        }
+      }
+
+      // console.log('payload', payload)
       await editUser({
         variables: {
-          input: values,
+          input: payload,
         },
         // TODO: temporary solution cause it makes extra network request
         // need to use a better method to update user cache after edit

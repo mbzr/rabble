@@ -37,7 +37,7 @@ export interface User {
 
 export type UserInfoType = Pick<
   User,
-  'id' | 'displayName' | 'email' | 'profilePhoto' | 'createdAt'
+  'id' | 'displayName' | 'email' | 'profilePhoto' | 'createdAt' | 'role'
 >
 
 export type LoginPayload = Pick<User, 'email' | 'password'>

@@ -7,5 +7,7 @@ export default gql`
     email
     profilePhoto
     createdAt
+    role
+    timezone
   }
 `
