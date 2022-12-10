@@ -1,7 +1,9 @@
 import { gql, useQuery } from '@apollo/client'
 
-import userInfoFragment from '@/apollo/client/fragments/user/userInfo'
-import userSettingsFragment from '@/apollo/client/fragments/user/userSettings'
+import {
+  userInfoFragment,
+  userSettingsFragment,
+} from '@/apollo/client/fragments/user'
 import { GetCurrentUserSettingsType } from '@/lib/types/user'
 
 interface GetCurrentUserSettingsResponse {

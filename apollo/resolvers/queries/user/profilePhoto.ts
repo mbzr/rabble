@@ -1,6 +1,6 @@
 import { signImageUrl } from '@/lib/utils/file-upload'
 
-export default async (user: any, _: any, __: any) => {
+export default async function getProfilePhoto(user: any, _: any, __: any) {
   const { profilePhoto } = user
 
   if (!profilePhoto) return null

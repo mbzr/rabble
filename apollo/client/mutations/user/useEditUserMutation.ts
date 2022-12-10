@@ -1,7 +1,7 @@
 import { gql, useMutation } from '@apollo/client'
 
 import { EditUserType, UserInfoType } from '@/lib/types/user'
-import userInfoFragment from '@/apollo/client/fragments/user/userInfo'
+import { userInfoFragment } from '@/apollo/client/fragments/user'
 
 interface EditUserResponse extends UserInfoType {}
 

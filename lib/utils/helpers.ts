@@ -1,9 +1,19 @@
-export const ensureAuthenticated =
-  (resolver: Function) =>
-  async (parent: any, args: any, ctx: any, info: any) => {
-    if (!ctx.user || !ctx.user.id) {
-      return new Error('Unauthorized. You must be logged in to do this.')
-    }
+import slugify from 'slugify'
 
-    return resolver(parent, args, ctx, info)
+export const slugger = (
+  str: string,
+  customOptions?: {
+    replacement?: string
+    remove?: RegExp
+    lower?: boolean
+    strict?: boolean
+    locale?: string
+    trim?: boolean
   }
+) =>
+  slugify(str, {
+    replacement: '-',
+    lower: true,
+    trim: true,
+    ...customOptions,
+  })

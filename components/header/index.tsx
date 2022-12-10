@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { useApolloClient } from '@apollo/client'
 
 import { Container } from '@/components/globals'
@@ -9,9 +9,9 @@ import { PrimaryButton } from '@/components/button'
 import useCurrentUser from '@/apollo/client/queries/user/useCurrentUser'
 import { StyledHeader, Inner, SideButtons, LoginAnchor } from './style'
 
-const Header: React.FC<{}> = () => {
+const HeaderUser = () => {
   const client = useApolloClient()
-  const { data, loading } = useCurrentUser()
+  const { data } = useCurrentUser()
 
   const handleLogout = async () => {
     try {
@@ -25,6 +25,23 @@ const Header: React.FC<{}> = () => {
     }
   }
 
+  if (data?.user) {
+    return (
+      <>
+        <Link href="/account">Hi, {data.user.displayName}</Link>
+        <PrimaryButton onClick={handleLogout} target="_self">
+          Logout
+        </PrimaryButton>
+      </>
+    )
+  }
+
+  return null
+}
+
+const Header: React.FC<{}> = () => {
+  const { data: session } = useSession()
+
   return (
     <StyledHeader>
       <Container>
@@ -32,14 +49,8 @@ const Header: React.FC<{}> = () => {
           <Logo />
 
           <SideButtons>
-            {loading ? <div>Loading...</div> : ''}
-            {data?.user ? (
-              <>
-                <Link href="/account">Hi, {data.user.displayName}</Link>
-                <PrimaryButton onClick={handleLogout} target="_self">
-                  Logout
-                </PrimaryButton>
-              </>
+            {session ? (
+              <HeaderUser />
             ) : (
               <>
                 <LoginAnchor href="/login">Login</LoginAnchor>

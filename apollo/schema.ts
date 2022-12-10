@@ -4,6 +4,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema'
 // Types
 import * as customScalars from './entities/scalars'
 import User from './entities/User'
+import Course from './entities/Course'
 
 // Resolvers
 import resolvers from './resolvers'
@@ -26,6 +27,6 @@ const Root = gql`
 `
 
 export const schema = makeExecutableSchema({
-  typeDefs: [customScalars.typeDefs, Root, User],
+  typeDefs: [customScalars.typeDefs, Root, User, Course],
   resolvers,
 })

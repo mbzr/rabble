@@ -48,6 +48,11 @@ export type GetCurrentUserSettingsType = UserInfoType & {
   settings: UserSettingsType
 }
 
+export type CreateUserType = {
+  email: string
+  password: string
+}
+
 export type EditUserType = {
   displayName?: string
   email?: string

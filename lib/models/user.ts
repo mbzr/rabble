@@ -1,11 +1,8 @@
 import db from '../db'
+import { CreateUserType, EditUserType } from '../types/user'
 import { uploadImage } from '../utils/file-upload'
 
-export const createUser = async ({
-  input,
-}: {
-  input: { email: string; password: string }
-}) => {
+export const createUser = async ({ input }: { input: CreateUserType }) => {
   const { email, password } = input
 
   const displayName = email.substring(0, email.lastIndexOf('@'))
@@ -39,8 +36,11 @@ export const getUserById = async (id: string) => {
   return (rows && rows[0]) || null
 }
 
-export const editUser = async (args: any, userId: string) => {
-  const { displayName, email, file } = args.input
+export const editUser = async (
+  { input }: { input: EditUserType },
+  userId: string
+) => {
+  const { displayName, email, file } = input
 
   return await db('users')
     .where({ id: userId })

@@ -8,3 +8,17 @@ export const EMAIL_ADDRESS_REGEX =
 export const FRONTEND_URL = __PROD__
   ? 'https://rabbleacademy.xyz'
   : 'http://localhost:3000'
+
+/**
+ * (?=.{8,}): Set the minimum number of characters
+
+  ((?=.[!@#$%^&()-=+{};:,<.>]){1}): Verify if there is at least 1 character of the list "!@#$%^&*()-=+{};:,<.>"
+
+  (?=.*\d): Verify if there is a digit
+
+  ((?=.*[a-z]){1}): Verify if there is a lower case alphabetical character
+
+  ((?=.*[A-Z]){1}): Verify if there is an upper case alphabetical character
+  */
+export const PASSWORD_REGEX =
+  /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/

@@ -1,6 +1,6 @@
 import { getUserById } from '@/lib/models/user'
 
-export default async (_: any, __: any, ctx: any) => {
+export default async function getCurrentUser(_: any, __: any, ctx: any) {
   const { user } = ctx
   if (!user || !user.id) return null
 
