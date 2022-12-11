@@ -72,7 +72,7 @@ const CreateCourseForm: React.FC<{}> = () => {
     if (!file) return
 
     reader.onloadend = () => {
-      setFieldValue('file', file)
+      setFieldValue('coverFile', file)
     }
 
     if (file) {

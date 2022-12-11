@@ -6,8 +6,9 @@ export const courseInfoFragment = gql`
     name
     slug
     description
-    isPrivate
     createdAt
+    isPrivate
     isArchived
+    coverPhoto
   }
 `

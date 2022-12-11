@@ -21,6 +21,7 @@ export type CourseInfoType = Pick<
   | 'createdAt'
   | 'isPrivate'
   | 'isArchived'
+  | 'coverPhoto'
 >
 
 export type CreateCourseInput = {

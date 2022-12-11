@@ -1,5 +1,6 @@
 import db from '../db'
-import { CreateCourseInput } from '../types/course'
+import { CourseInfoType, CreateCourseInput } from '../types/course'
+import { uploadImage } from '../utils/file-upload'
 
 export const createCourse = async (
   {
@@ -11,20 +12,41 @@ export const createCourse = async (
 ): Promise<any> => {
   const { name, description, slug, coverFile, isPrivate } = input
 
-  const res = await db('courses').returning('*').insert({
-    name,
-    description,
-    slug,
-    isPrivate,
-    createdAt: new Date(),
-    modifiedAt: null,
-    coverPhoto: null,
-    ownerId: userId,
-    isArchived: false,
-    isPremium: false,
-  })
+  return db('courses')
+    .returning('*')
+    .insert({
+      name,
+      description,
+      slug,
+      isPrivate,
+      createdAt: new Date(),
+      modifiedAt: null,
+      coverPhoto: null,
+      ownerId: userId,
+      isArchived: false,
+      isPremium: false,
+    })
+    .then((res: any) => {
+      const course = res ? res[0] : undefined
 
-  return res && res[0]
+      if (course && coverFile) {
+        return uploadImage(coverFile, 'courses', course.id)
+          .then((coverPhoto) => {
+            // update the course with the coverPhoto
+            return db('courses')
+              .returning('*')
+              .where({ id: course.id })
+              .update({
+                ...course,
+                coverPhoto,
+              })
+              .then((res: any) => (res && res[0]) || null)
+          })
+          .catch((err: any) => console.error(err))
+      }
+
+      return course
+    })
 }
 
 export const createCourseOwner = async (
