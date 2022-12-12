@@ -1,14 +1,14 @@
 import React from 'react'
 import { NextPage } from 'next'
 
-import CreateCourseForm from '@/components/forms/createCourseForm'
 import { withApollo } from '@/apollo/withApollo'
+import Link from 'next/link'
 
 const AdminPage: NextPage<{}> = ({}) => {
   return (
     <div>
       <h1>Welcome to the admin page</h1>
-      <CreateCourseForm />
+      <Link href="/admin/course/new">New Course</Link>
     </div>
   )
 }
