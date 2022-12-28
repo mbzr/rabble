@@ -3,7 +3,6 @@ import axios from 'axios'
 const vimeoApi = axios.create({
   baseURL: 'https://api.vimeo.com',
   headers: {
-    Accept: 'application/json',
     'Content-Type': 'application/json',
     Authorization: `Bearer ${process.env.VIMEO_ACCESS_TOKEN}`,
   },

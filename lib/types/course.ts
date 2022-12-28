@@ -9,7 +9,7 @@ export interface Course {
   isPrivate: boolean
   isArchived: boolean
   isPremium: boolean
-  ownerId: string
+  vimeoFolderUri: string
 }
 
 export type CourseInfoType = Pick<
@@ -22,6 +22,7 @@ export type CourseInfoType = Pick<
   | 'isPrivate'
   | 'isArchived'
   | 'coverPhoto'
+  | 'vimeoFolderUri'
 >
 
 export type CreateCourseInput = {
@@ -30,6 +31,7 @@ export type CreateCourseInput = {
   description: string
   coverFile?: object
   isPrivate: boolean
+  vimeoFolderUri: string
 }
 
 export type EditCourseInput = {

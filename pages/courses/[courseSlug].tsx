@@ -1,22 +1,16 @@
 import React from 'react'
 import { NextPage } from 'next'
-import { useRouter } from 'next/router'
 import Image from 'next/image'
 
 import { withApollo } from '@/apollo/withApollo'
-import { useCourseBySlug } from '@/apollo/client/queries/course/useCourseByIdOrSlug'
+import useCourse from '@/lib/hooks/useCourse'
 
-const CoursePage: NextPage<{}> = ({}) => {
-  const router = useRouter()
-  let { slug } = router.query
-  slug ??= '' as string
-  const { data, error, loading } = useCourseBySlug(slug as string)
+const CoursePage: NextPage<{}> = () => {
+  const { course, error, loading } = useCourse()
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>ERROR: {error.message}</div>
-  if (!data || !data.course) return <div>Course not found</div>
-
-  const course = data.course
+  if (!course) return <div>Course not found</div>
 
   return (
     <div>

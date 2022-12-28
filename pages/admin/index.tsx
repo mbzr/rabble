@@ -1,10 +1,10 @@
 import React from 'react'
 import { NextPage } from 'next'
-
-import { withApollo } from '@/apollo/withApollo'
 import Link from 'next/link'
 
-const AdminPage: NextPage<{}> = ({}) => {
+import { withApollo } from '../../apollo/withApollo'
+
+const AdminPage: NextPage<{}> = () => {
   return (
     <div>
       <h1>Welcome to the admin page</h1>

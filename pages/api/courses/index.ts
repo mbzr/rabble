@@ -6,12 +6,11 @@ async function coursesHandler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case 'POST':
       try {
-        const { name, description } = req.body
-        const createCourseRequest = await callVimeoApi('/me/albums', {
+        const { name } = req.body
+        const createCourseRequest = await callVimeoApi('/me/projects', {
           method: 'POST',
           params: {
             name,
-            description,
           },
         })
 

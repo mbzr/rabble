@@ -1,5 +1,5 @@
 import db from '../db'
-import { CourseInfoType, CreateCourseInput } from '../types/course'
+import { CreateCourseInput } from '../types/course'
 import { uploadImage } from '../utils/file-upload'
 
 export const createCourse = async (
@@ -10,7 +10,8 @@ export const createCourse = async (
   },
   userId: string
 ): Promise<any> => {
-  const { name, description, slug, coverFile, isPrivate } = input
+  const { name, description, slug, coverFile, isPrivate, vimeoFolderUri } =
+    input
 
   return db('courses')
     .returning('*')
@@ -19,6 +20,7 @@ export const createCourse = async (
       description,
       slug,
       isPrivate,
+      vimeoFolderUri,
       createdAt: new Date(),
       modifiedAt: null,
       coverPhoto: null,
@@ -59,8 +61,6 @@ export const createCourseOwner = async (
     createdAt: new Date(),
     isOwner: true,
     isMember: true,
-    isBlocked: false,
-    isPending: false,
     receiveNotifications: true,
   })
 

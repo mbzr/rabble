@@ -3,7 +3,9 @@ import { gql, useMutation } from '@apollo/client'
 import { CreateCourseInput, CourseInfoType } from '@/lib/types/course'
 import { courseInfoFragment } from '@/apollo/client/fragments/course'
 
-interface CreateCourseResponse extends CourseInfoType {}
+interface CreateCourseResponse {
+  course: CourseInfoType
+}
 
 interface CreateCourseVariables {
   input: CreateCourseInput
@@ -11,7 +13,7 @@ interface CreateCourseVariables {
 
 export const createCourseMutation = gql`
   mutation createCourse($input: CreateCourseInput!) {
-    createCourse(input: $input) {
+    course: createCourse(input: $input) {
       ...courseInfo
     }
   }

@@ -1,6 +1,13 @@
 import { gql } from '@apollo/client'
 
 const Course = gql`
+  enum Level {
+    ALL
+    BEGINNER
+    INTERMEDIATE
+    EXPERT
+  }
+
   type Course {
     id: ID!
     createdAt: Date
@@ -12,15 +19,23 @@ const Course = gql`
     isPrivate: Boolean
     isArchived: Boolean
     isPremium: Boolean
-    ownerId: ID
+    owner: User
+    vimeoFolderUri: String
+    lessons: [Lesson]
+    lessonCount: Int
+    totalDuration: Int
+    level: Level
+    rating: Int
+    memberCount: Int
   }
 
   input CreateCourseInput {
     name: String!
     slug: LowercaseString!
-    description: String
+    description: String!
     coverFile: Upload
     isPrivate: Boolean
+    vimeoFolderUri: String!
   }
 
   input EditCourseInput {

@@ -2,15 +2,16 @@ import React from 'react'
 import Image from 'next/image'
 import { Formik, Form, Field, FieldProps } from 'formik'
 import { string, object, mixed, boolean } from 'yup'
+import { useRouter } from 'next/router'
 
 import { PrimaryButton } from '@/components/button'
 import { Input } from '@/components/formElements'
 import useCreateCourseMutation from '@/apollo/client/mutations/course/useCreateCourseMutation'
-import { CourseInfoType, CreateCourseInput } from '@/lib/types/course'
+import { CreateCourseInput } from '@/lib/types/course'
 import { slugger } from '@/lib/utils/helpers'
 import { callApi } from '@/lib/hooks/useApi'
 
-type FormValues = CreateCourseInput
+type FormValues = Omit<CreateCourseInput, 'vimeoFolderUri'>
 
 const validationSchema = object({
   name: string().required(),
@@ -23,9 +24,10 @@ const validationSchema = object({
   isPrivate: boolean().required(),
 })
 
-const CreateCourseForm: React.FC<{}> = () => {
+const CreateCourseForm = () => {
   const [createError, setCreateError] = React.useState(null)
   const [createCourse] = useCreateCourseMutation()
+  const router = useRouter()
 
   const initialValues: FormValues = {
     name: '',
@@ -96,17 +98,26 @@ const CreateCourseForm: React.FC<{}> = () => {
 
       const body = {
         name: values.name,
-        description: values.description,
       }
 
-      await Promise.all([
-        callApi('/courses', 'POST', body),
-        createCourse({
+      const apiResponse = await callApi('/courses', 'POST', body)
+
+      if (apiResponse && apiResponse.result) {
+        console.log('apiResponse', apiResponse)
+        await createCourse({
           variables: {
-            input: values,
+            input: {
+              ...values,
+              vimeoFolderUri: apiResponse.result.uri,
+            },
           },
-        }),
-      ])
+          onCompleted: (data) => {
+            console.log('create data', data)
+
+            router.push(`/admin/courses/${data?.course?.slug}`)
+          },
+        })
+      }
     } catch (err: any) {
       setCreateError(err.message)
     } finally {
@@ -116,9 +127,8 @@ const CreateCourseForm: React.FC<{}> = () => {
 
   return (
     <div>
-      <h2>Create Course</h2>
+      <h2>Create a new course</h2>
       {createError && <div>{createError}</div>}
-
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

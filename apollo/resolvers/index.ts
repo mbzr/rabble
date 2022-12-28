@@ -1,10 +1,12 @@
 import { merge } from 'lodash'
 
 import * as customScalars from '../entities/scalars'
-import courseMutations from './mutations/course'
+import userQueries from './queries/user'
 import userMutations from './mutations/user'
 import courseQueries from './queries/course'
-import userQueries from './queries/user'
+import courseMutations from './mutations/course'
+import lessonQueries from './queries/lesson'
+import lessonMutations from './mutations/lesson'
 
 const resolvers = merge(
   {},
@@ -12,7 +14,9 @@ const resolvers = merge(
   userQueries,
   userMutations,
   courseQueries,
-  courseMutations
+  courseMutations,
+  lessonQueries,
+  lessonMutations
 )
 
 export default resolvers
