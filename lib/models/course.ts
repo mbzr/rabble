@@ -86,3 +86,49 @@ export const getCourseBySlug = async (slug: string) => {
 
   return (rows && rows[0]) || null
 }
+
+export const editCourse = async ({ input }: any) => {
+  const { name, slug, description, coverFile, isPrivate, level, courseId } =
+    input
+
+  const courseRecord = await db('courses')
+    .where({ id: courseId })
+    .then((result: any) => {
+      // console.log('result', result)
+      if (!result || result.length === 0) {
+        throw new Error('No course found.')
+      }
+
+      return Object.assign({}, result[0], {
+        name,
+        slug,
+        description,
+        isPrivate,
+        level,
+        modifiedAt: new Date(),
+      })
+    })
+
+  if (coverFile) {
+    return await uploadImage(coverFile, 'courses', courseId)
+      .then((coverPhoto: string) => {
+        // update the course with the coverPhoto
+        return db('courses')
+          .where({ id: courseId })
+          .update({
+            ...courseRecord,
+            coverPhoto,
+          })
+          .then((res: any) => (res && res[0]) || null)
+      })
+      .catch((err: any) => console.error(err))
+  } else {
+    return await db('courses')
+      .where({ id: courseId })
+      .update({
+        ...courseRecord,
+      })
+      .then((res: any) => (res && res[0]) || null)
+      .catch((err: any) => console.error(err))
+  }
+}

@@ -1,4 +1,4 @@
-import { ensureAuthenticated } from '@/lib/auth/helpers'
+import { ensureAuthenticated } from '@/lib/utils/permissions'
 import {
   createLesson,
   createLessonOwner,

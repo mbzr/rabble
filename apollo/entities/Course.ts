@@ -41,8 +41,11 @@ const Course = gql`
 
   input EditCourseInput {
     name: String
+    slug: LowercaseString
     description: String
     coverFile: Upload
+    isPrivate: Boolean
+    level: Level
     courseId: ID!
   }
 

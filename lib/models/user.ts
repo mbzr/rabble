@@ -46,7 +46,7 @@ export const editUser = async (
     .where({ id: userId })
     .then((result: any) => {
       // console.log('result', result)
-      if (!result) {
+      if (!result || result.length === 0) {
         throw Error('No user found.')
       }
 

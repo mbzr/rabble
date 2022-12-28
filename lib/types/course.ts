@@ -51,7 +51,10 @@ export type CreateCourseInput = {
 
 export type EditCourseInput = {
   name: string
+  slug: string
   description: string
-  coverFile: object
+  coverFile?: object
+  isPrivate: boolean
+  level: LevelStrings
   courseId: string
 }

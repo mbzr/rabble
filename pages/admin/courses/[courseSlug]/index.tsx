@@ -1,9 +1,9 @@
 import React from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 
 import { withApollo } from '@/apollo/withApollo'
 import useCourse from '@/lib/hooks/useCourse'
+import EditCourseForm from '@/components/forms/editCourseForm'
 
 const AdminEditCoursePage = () => {
   const { course, loading, error } = useCourse()
@@ -14,18 +14,8 @@ const AdminEditCoursePage = () => {
 
   return (
     <div>
-      <h1>Edit Course</h1>
+      <EditCourseForm course={course} />
 
-      <Image
-        src={course.coverPhoto || '/default_profile_photo.png'}
-        alt={course.name}
-        width={150}
-        height={150}
-        priority
-      />
-      <h2>{course.name}</h2>
-      <p>{course.description}</p>
-      <p>{course.level}</p>
       <hr />
       <h2>Lessons</h2>
       <div>No Lessons Yet</div>
