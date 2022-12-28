@@ -8,7 +8,7 @@ const AdminPage: NextPage<{}> = () => {
   return (
     <div>
       <h1>Welcome to the admin page</h1>
-      <Link href="/admin/course/new">New Course</Link>
+      <Link href="/admin/courses/new">New Course</Link>
     </div>
   )
 }
