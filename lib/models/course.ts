@@ -10,8 +10,15 @@ export const createCourse = async (
   },
   userId: string
 ): Promise<any> => {
-  const { name, description, slug, coverFile, isPrivate, vimeoFolderUri } =
-    input
+  const {
+    name,
+    description,
+    slug,
+    coverFile,
+    isPrivate,
+    vimeoFolderUri,
+    level,
+  } = input
 
   return db('courses')
     .returning('*')
@@ -21,6 +28,7 @@ export const createCourse = async (
       slug,
       isPrivate,
       vimeoFolderUri,
+      level,
       createdAt: new Date(),
       modifiedAt: null,
       coverPhoto: null,

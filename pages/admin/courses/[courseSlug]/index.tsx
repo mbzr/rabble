@@ -25,6 +25,7 @@ const AdminEditCoursePage = () => {
       />
       <h2>{course.name}</h2>
       <p>{course.description}</p>
+      <p>{course.level}</p>
       <hr />
       <h2>Lessons</h2>
       <div>No Lessons Yet</div>

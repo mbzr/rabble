@@ -36,6 +36,7 @@ const Course = gql`
     coverFile: Upload
     isPrivate: Boolean
     vimeoFolderUri: String!
+    level: Level
   }
 
   input EditCourseInput {

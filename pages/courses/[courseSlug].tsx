@@ -4,6 +4,7 @@ import Image from 'next/image'
 
 import { withApollo } from '@/apollo/withApollo'
 import useCourse from '@/lib/hooks/useCourse'
+import Layout from '@/components/layout'
 
 const CoursePage: NextPage<{}> = () => {
   const { course, error, loading } = useCourse()
@@ -13,7 +14,7 @@ const CoursePage: NextPage<{}> = () => {
   if (!course) return <div>Course not found</div>
 
   return (
-    <div>
+    <Layout>
       <Image
         priority
         src={course.coverPhoto || '/default_profile_photo.png'}
@@ -23,7 +24,7 @@ const CoursePage: NextPage<{}> = () => {
       />
       <h1>{course.name}</h1>
       <p>{course.description}</p>
-    </div>
+    </Layout>
   )
 }
 

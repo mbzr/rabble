@@ -22,6 +22,7 @@ const validationSchema = object({
   description: string().max(140, "You've reached character limit").required(),
   coverFile: mixed(),
   isPrivate: boolean().required(),
+  level: mixed().required(),
 })
 
 const CreateCourseForm = () => {
@@ -35,6 +36,7 @@ const CreateCourseForm = () => {
     description: '',
     isPrivate: false,
     coverFile: undefined,
+    level: 'ALL',
   }
 
   const onSlugChange = (
@@ -187,6 +189,13 @@ const CreateCourseForm = () => {
                   {...field}
                 />
               )}
+            </Field>
+
+            <Field as="select" name="level">
+              <option value="ALL">ALL</option>
+              <option value="BEGINNER">BEGINNER</option>
+              <option value="INTERMEDIATE">INTERMEDIATE</option>
+              <option value="EXPERT">EXPERT</option>
             </Field>
 
             <Field type="checkbox" name="isPrivate" />

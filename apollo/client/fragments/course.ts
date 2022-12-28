@@ -11,5 +11,6 @@ export const courseInfoFragment = gql`
     isArchived
     coverPhoto
     vimeoFolderUri
+    level
   }
 `

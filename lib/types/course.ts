@@ -1,3 +1,15 @@
+export enum Level {
+  ALL = 'ALL',
+  BEGINNER = 'BEGINNER',
+  INTERMEDIATE = 'INTERMEDIATE',
+  EXPERT = 'EXPERT',
+}
+
+/**
+ * This is equivalent to:
+ * type LevelStrings = 'ALL' | 'BEGINNER' | 'INTERMEDIATE' | 'EXPERT';
+ */
+export type LevelStrings = keyof typeof Level
 export interface Course {
   id: string
   createdAt: Date
@@ -10,6 +22,7 @@ export interface Course {
   isArchived: boolean
   isPremium: boolean
   vimeoFolderUri: string
+  level: LevelStrings
 }
 
 export type CourseInfoType = Pick<
@@ -23,6 +36,7 @@ export type CourseInfoType = Pick<
   | 'isArchived'
   | 'coverPhoto'
   | 'vimeoFolderUri'
+  | 'level'
 >
 
 export type CreateCourseInput = {
@@ -32,6 +46,7 @@ export type CreateCourseInput = {
   coverFile?: object
   isPrivate: boolean
   vimeoFolderUri: string
+  level: LevelStrings
 }
 
 export type EditCourseInput = {
