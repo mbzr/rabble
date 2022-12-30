@@ -7,7 +7,8 @@
       "@/graphql/*": ["graphql/*"],
       "@/fragments/*": ["graphql/fragments/*"],
       "@/types/*": ["graphql/types/*"],
-      "@/lib/*": ["lib/*"]
+      "@/lib/*": ["lib/*"],
+      "@/knex/*": ["knex/*"]
     },
     "module": "es2020",
     "target": "es2020",

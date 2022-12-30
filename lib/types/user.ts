@@ -4,6 +4,8 @@ export enum Role {
   MEMBER = 'MEMBER',
 }
 
+export type RoleStrings = keyof typeof Role
+
 export type UserSettingsType = {
   notifications: {
     newsletter: boolean
@@ -17,21 +19,20 @@ export type ProviderUserInfo = {
   rawId: string
   profilePhoto: string
 }
-
 export interface User {
   id: string
   displayName: string
   email: string
   emailVerified: boolean
-  profilePhoto: string
-  providerUserInfo: ProviderUserInfo[]
+  profilePhoto: string | null
   createdAt: Date
-  modifiedAt: Date
-  lastLoginAt: Date
-  timezone: number
+  modifiedAt: Date | null
+  lastLoginAt: Date | null
+  timezone: string
   password: string
-  passwordUpdatedAt: Date
-  role: Role
+  passwordUpdatedAt: Date | null
+  bannedAt: Date | null
+  role: RoleStrings
   settings: UserSettingsType
 }
 

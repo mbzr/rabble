@@ -13,11 +13,11 @@ export type LevelStrings = keyof typeof Level
 export interface Course {
   id: string
   createdAt: Date
-  modifiedAt: Date
+  modifiedAt: Date | null
   name: string
   slug: string
   description: string
-  coverPhoto: string
+  coverPhoto: string | null
   isPrivate: boolean
   isArchived: boolean
   isPremium: boolean

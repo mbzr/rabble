@@ -1,4 +1,4 @@
-import db from '../db'
+import db from '@/knex/db'
 import { CreateUserType, EditUserType } from '../types/user'
 import { uploadImage } from '../utils/file-upload'
 
@@ -21,7 +21,13 @@ export const createUser = async ({ input }: { input: CreateUserType }) => {
     role: 'MEMBER',
   })
 
-  return (res && res[0]) || null
+  const user: any = res && res[0]
+
+  if (user) {
+    await createUserSettings(user.id)
+  }
+
+  return user || null
 }
 
 export const getUserByEmail = async (email: string) => {

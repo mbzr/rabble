@@ -1,5 +1,3 @@
-import { CourseInfoType } from './course'
-
 export type Video = {
   id: number
   uri: string
@@ -12,7 +10,7 @@ export type Video = {
 export interface Lesson {
   id: string
   createdAt: Date
-  modifiedAt: Date
+  modifiedAt: Date | null
   name: string
   slug: string
   description: string

@@ -1,4 +1,4 @@
-import db from '../db'
+import db from '@/knex/db'
 import { CreateLessonInput } from '../types/lesson'
 
 export const createLesson = async (

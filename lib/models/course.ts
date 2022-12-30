@@ -1,4 +1,4 @@
-import db from '../db'
+import db from '@/knex/db'
 import { CreateCourseInput } from '../types/course'
 import { uploadImage } from '../utils/file-upload'
 
