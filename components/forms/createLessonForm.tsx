@@ -99,41 +99,41 @@ const CreateLessonForm: React.FC<CreateLessonFormProps> = ({
       setIsUploading(true)
 
       const { file, ...rest } = values
-      await uploadVideoToVimeo({
+      const uploadResponse = await uploadVideoToVimeo({
         file,
         name: values.name,
         description: values.description,
         folderUri: folderUri,
-        progressCallback: (progress: string) => {
-          setProgress(progress)
-        },
-        successCallback: (result: any) => {
-          createLesson({
-            variables: {
-              input: {
-                ...rest,
-                slug: values.name,
-                courseId: courseId,
-                video: {
-                  id: Number(result.link.split('/').pop()),
-                  uri: result.link,
-                  width: result.width,
-                  height: result.height,
-                  duration: result.duration,
-                  size: result.upload.size,
-                },
+        progressCallback: setProgress,
+      })
+
+      if (uploadResponse) {
+        await createLesson({
+          variables: {
+            input: {
+              ...rest,
+              slug: values.name,
+              courseId: courseId,
+              video: {
+                id: Number(uploadResponse.link.split('/').pop()),
+                uri: uploadResponse.link,
+                width: uploadResponse.width,
+                height: uploadResponse.height,
+                duration: uploadResponse.duration,
+                size: uploadResponse.upload.size,
               },
             },
-            onError(error: string, clientOptions) {
-              setIsUploading(false)
-              setCreateError('Error uploading video')
-            },
-            onCompleted: (data) => {
-              setIsUploading(false)
-            },
-          })
-        },
-      })
+          },
+          onError(error, clientOptions) {
+            console.log('error', error)
+            setIsUploading(false)
+            setCreateError('Something went wrong. Failed to create lesson.')
+          },
+          onCompleted(data, clientOptions) {
+            setIsUploading(false)
+          },
+        })
+      }
     } catch (err: any) {
       setIsUploading(false)
       setCreateError(err.message)
