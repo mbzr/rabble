@@ -10,6 +10,22 @@ export const uploadVideoToVimeo = async (params: any): Promise<any> => {
     description,
     fileSize: file.size,
     folderUri,
+    // below options will only work with a pro account with vimeo
+    embed: {
+      buttons: {
+        embed: false,
+        like: false,
+        share: false,
+        watchlater: false,
+      },
+      logos: { vimeo: false },
+      title: {
+        name: 'hide',
+        owner: 'hide',
+        portrait: 'hide',
+      },
+    },
+    privacy: { view: 'disable', embed: 'public', download: false },
   })
 
   if (!createResponse || !createResponse.result) {
