@@ -3,14 +3,23 @@ import _ from 'lodash'
 import convertToCamel from 'camelcase-keys'
 import knexConfig from '../knexfile'
 
-const db = knex({
-  ...knexConfig,
-  postProcessResponse: (result, _queryContext) =>
-    Array.isArray(result)
-      ? result.map((row) => convertToCamel(row))
-      : convertToCamel(result),
-  wrapIdentifier: (value, origImpl) =>
-    value === '*' ? '*' : origImpl(_.snakeCase(value)),
-})
+let cached = global.pg
+if (!cached) cached = global.pg = {}
 
-export default db
+function getKnex() {
+  if (!cached.instance) {
+    cached.instance = knex({
+      ...knexConfig,
+      postProcessResponse: (result, _queryContext) =>
+        Array.isArray(result)
+          ? result.map((row) => convertToCamel(row))
+          : convertToCamel(result),
+      wrapIdentifier: (value, origImpl) =>
+        value === '*' ? '*' : origImpl(_.snakeCase(value)),
+    })
+  }
+
+  return cached.instance
+}
+
+export default getKnex()

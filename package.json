@@ -23,6 +23,7 @@
     "@types/express-session": "^1.17.5",
     "@types/graphql-upload": "^8.0.12",
     "@types/styled-components": "^5.1.26",
+    "@u-wave/react-vimeo": "^0.9.10",
     "apollo-server": "^3.10.4",
     "apollo-server-express": "^3.10.4",
     "apollo-server-micro": "^3.11.0",

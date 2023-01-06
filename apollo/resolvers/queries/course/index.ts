@@ -1,5 +1,6 @@
 import getCourseCoverPhoto from './coverPhoto'
 import getCourse from './getCourse'
+import lessons from './lessons'
 
 const courseQueries = {
   Query: {
@@ -7,6 +8,7 @@ const courseQueries = {
   },
   Course: {
     coverPhoto: getCourseCoverPhoto,
+    lessons: lessons,
   },
 }
 

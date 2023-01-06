@@ -1,56 +1,75 @@
 import React from 'react'
-import { Formik, Form, Field, FieldProps } from 'formik'
-import { string, object, mixed, boolean } from 'yup'
-
-const tus = require('tus-js-client')
+import { Formik, Form, Field, FieldProps, FormikBag, FormikProps } from 'formik'
+import { string, object, mixed } from 'yup'
 
 import { PrimaryButton } from '@/components/button'
 import { Input } from '@/components/formElements'
-import { callApi } from '@/lib/hooks/useApi'
 import useCreateLessonMutation from '@/apollo/client/mutations/lesson/useCreateLessonMutation'
-import { useRouter } from 'next/router'
+import { uploadVideoToVimeo } from '@/lib/vimeo/helpers'
+import { slugger } from '@/lib/utils/helpers'
+import { SLUG_DENYLIST } from '@/lib/utils/permissions'
+// import { callApi } from '@/lib/hooks/useApi'
 
 interface FormValues {
   name: string
   slug: string
   description: string
   file: File | undefined
-  isPrivate: boolean
 }
 
 const validationSchema = object({
-  name: string().required(),
-  slug: string().required(),
-  description: string().required(),
+  name: string().required().max(20, "You've reached character limit"),
+  slug: string()
+    .matches(/^[a-z](-?[a-z])*$/, 'Must be a slug')
+    .max(24, "You've reached character limit")
+    .required(),
+  description: string().required().max(140, "You've reached character limit"),
   file: mixed().required(),
-  isPrivate: boolean().required(),
 })
 
-const CreateLessonForm: React.FC<{ course: any }> = ({ course }) => {
+export type CreateLessonFormProps = {
+  courseId: string
+  folderUri: string
+}
+
+const CreateLessonForm: React.FC<CreateLessonFormProps> = ({
+  courseId,
+  folderUri,
+}) => {
   const [progress, setProgress] = React.useState<string | null>(null)
   const [createError, setCreateError] = React.useState<string | null>(null)
+  const [isUploading, setIsUploading] = React.useState<boolean>(false)
   const [createLesson] = useCreateLessonMutation()
-  const router = useRouter()
 
   const initialValues: FormValues = {
     name: '',
     slug: '',
     description: '',
     file: undefined,
-    isPrivate: false,
+  }
+
+  const onNameChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    { setFieldValue }: any
+  ) => {
+    let name = e.target.value
+    setFieldValue('name', name)
+    let slug = slugger(name)
+    setFieldValue('slug', slug, false)
+  }
+
+  const onSlugChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    { setFieldValue }: any
+  ) => {
+    let slug = e.target.value
+    slug = slugger(slug)
+    setFieldValue('slug', slug, false)
   }
 
   const onFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    {
-      setFieldValue,
-    }: {
-      setFieldValue: (
-        field: string,
-        value: any,
-        shouldValidate?: boolean
-      ) => void
-    }
+    { setFieldValue }: any
   ) => {
     if (!e.target.files) return
 
@@ -69,94 +88,54 @@ const CreateLessonForm: React.FC<{ course: any }> = ({ course }) => {
     }
   }
 
-  const handleSubmit = async (
-    values: FormValues,
-    {
-      setSubmitting,
-    }: {
-      setSubmitting: (isSubmitting: boolean) => void
-    }
-  ) => {
+  const handleSubmit = async (values: FormValues, { setFieldError }: any) => {
     try {
-      if (!values.file || !values.name) {
-        return
+      if (SLUG_DENYLIST.indexOf(values.slug) > -1) {
+        return setFieldError('slug', 'This slug is not allowed')
       }
 
+      setProgress(null)
       setCreateError(null)
-      setSubmitting(true)
+      setIsUploading(true)
 
-      const fileSize = values.file.size
-
-      const uploadResponse = await callApi('/lessons/upload', 'POST', {
+      const { file, ...rest } = values
+      await uploadVideoToVimeo({
+        file,
         name: values.name,
         description: values.description,
-        fileSize: fileSize,
-        folderUri: course.vimeoFolderUri,
-      })
-
-      console.log('uploadResponse', uploadResponse)
-
-      if (!uploadResponse?.result) {
-        setCreateError('Error uploading video')
-        return
-      }
-
-      const tusUpload = new tus.Upload(values.file, {
-        endpoint: 'none',
-        uploadSize: fileSize,
-        retryDelays: [0, 1000, 3000, 5000],
-        onError: function (error: string) {
-          console.log('Failed because: ' + error)
-          throw new Error(error)
+        folderUri: folderUri,
+        progressCallback: (progress: string) => {
+          setProgress(progress)
         },
-        onProgress: function (bytesUploaded: number, bytesTotal: number) {
-          const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2)
-
-          setProgress(percentage)
-        },
-        onSuccess: function () {
-          const { file, ...rest } = values
-
+        successCallback: (result: any) => {
           createLesson({
             variables: {
               input: {
                 ...rest,
-                courseId: course.id,
+                slug: values.name,
+                courseId: courseId,
                 video: {
-                  id: Number(uploadResponse?.result.link.split('/').pop()),
-                  uri: uploadResponse?.result.link,
-                  width: uploadResponse?.result.width,
-                  height: uploadResponse?.result.height,
-                  duration: uploadResponse?.result.duration,
-                  size: uploadResponse?.result.upload.size,
+                  id: Number(result.link.split('/').pop()),
+                  uri: result.link,
+                  width: result.width,
+                  height: result.height,
+                  duration: result.duration,
+                  size: result.upload.size,
                 },
               },
             },
-            onError(error, clientOptions) {
-              setSubmitting(false)
+            onError(error: string, clientOptions) {
+              setIsUploading(false)
               setCreateError('Error uploading video')
             },
             onCompleted: (data) => {
-              setSubmitting(false)
-
-              router.push(
-                `/admin/courses/${course.slug}/lessons/${data.lesson.slug}`
-              )
+              setIsUploading(false)
             },
           })
-
-          console.log(
-            'Download %s from %s',
-            uploadResponse?.result.name,
-            uploadResponse?.result.upload.upload_link
-          )
         },
       })
-
-      tusUpload.url = uploadResponse?.result.upload.upload_link
-      await tusUpload.start()
     } catch (err: any) {
-      setSubmitting(false)
+      setIsUploading(false)
       setCreateError(err.message)
     }
   }
@@ -171,7 +150,7 @@ const CreateLessonForm: React.FC<{ course: any }> = ({ course }) => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, setFieldValue }) => (
+        {({ setFieldValue }) => (
           <Form noValidate method="post">
             <Field name="name">
               {({
@@ -187,6 +166,7 @@ const CreateLessonForm: React.FC<{ course: any }> = ({ course }) => {
                       : ''
                   }
                   {...field}
+                  onChange={(e) => onNameChange(e, { setFieldValue })}
                 />
               )}
             </Field>
@@ -195,18 +175,22 @@ const CreateLessonForm: React.FC<{ course: any }> = ({ course }) => {
               {({
                 field,
                 meta: { error, value, initialValue, touched },
-              }: FieldProps) => (
-                <Input
-                  type="text"
-                  required
-                  error={
-                    (touched || value !== initialValue) && Boolean(error)
-                      ? error
-                      : ''
-                  }
-                  {...field}
-                />
-              )}
+              }: FieldProps) => {
+                console.log('object', error, value, initialValue, touched)
+                return (
+                  <Input
+                    type="text"
+                    required
+                    error={
+                      (touched || value !== initialValue) && Boolean(error)
+                        ? error
+                        : ''
+                    }
+                    {...field}
+                    onChange={(e) => onSlugChange(e, { setFieldValue })}
+                  />
+                )
+              }}
             </Field>
 
             <Field name="description">
@@ -229,7 +213,7 @@ const CreateLessonForm: React.FC<{ course: any }> = ({ course }) => {
 
             <div>
               <label htmlFor="file">
-                Course Video
+                Lesson Video
                 <input
                   type="file"
                   name="file"
@@ -238,9 +222,7 @@ const CreateLessonForm: React.FC<{ course: any }> = ({ course }) => {
               </label>
             </div>
 
-            <Field type="checkbox" name="isPrivate" />
-
-            <PrimaryButton type="submit" isLoading={isSubmitting}>
+            <PrimaryButton type="submit" isLoading={isUploading}>
               Create
             </PrimaryButton>
           </Form>

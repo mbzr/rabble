@@ -14,7 +14,7 @@ export interface Lesson {
   name: string
   slug: string
   description: string
-  isPrivate: boolean
+  isPublished: boolean
   isArchived: boolean
   video: Video
 }
@@ -26,7 +26,7 @@ export type LessonInfoType = Pick<
   | 'slug'
   | 'description'
   | 'createdAt'
-  | 'isPrivate'
+  | 'isPublished'
   | 'isArchived'
   | 'video'
 >
@@ -36,12 +36,12 @@ export type CreateLessonInput = {
   slug: string
   description: string
   courseId: string
-  isPrivate: boolean
   video: Video
 }
 
 export type EditLessonInput = {
   name?: string
+  slug?: string
   description?: string
   lessonId: string
 }

@@ -14,6 +14,6 @@ export const slugger = (
   slugify(str, {
     replacement: '-',
     lower: true,
-    trim: true,
+    trim: false,
     ...customOptions,
   })

@@ -16,7 +16,7 @@ const Course = gql`
     slug: LowercaseString!
     description: String!
     coverPhoto: String
-    isPrivate: Boolean
+    isPublished: Boolean
     isArchived: Boolean
     isPremium: Boolean
     owner: User
@@ -34,7 +34,7 @@ const Course = gql`
     slug: LowercaseString!
     description: String!
     coverFile: Upload
-    isPrivate: Boolean
+    isPublished: Boolean
     vimeoFolderUri: String!
     level: Level
   }
@@ -44,7 +44,7 @@ const Course = gql`
     slug: LowercaseString
     description: String
     coverFile: Upload
-    isPrivate: Boolean
+    isPublished: Boolean
     level: Level
     courseId: ID!
   }

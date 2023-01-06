@@ -29,6 +29,10 @@ export const callApi = async (
     requestOptions.data = body
   }
 
+  if (body && method === 'GET') {
+    requestOptions.params = body
+  }
+
   try {
     const request = await api(requestOptions)
 
@@ -44,7 +48,6 @@ export const callApi = async (
       if (response) {
         const statusCode = response.status
 
-        console.log('api error response', response.data)
         return Promise.reject({
           code: statusCode,
           message: response.data.error,

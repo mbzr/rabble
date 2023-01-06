@@ -19,7 +19,7 @@ const validationSchema = object({
     .required(),
   description: string().max(140, "You've reached character limit").required(),
   coverFile: mixed(),
-  isPrivate: boolean().required(),
+  isPublished: boolean().required(),
   level: mixed().required(),
 })
 
@@ -31,7 +31,7 @@ const EditCourseForm: React.FC<{ course: any }> = ({ course }) => {
     name: course.name,
     slug: course.slug,
     description: course.description,
-    isPrivate: course.isPrivate,
+    isPublished: course.isPublished,
     coverFile: undefined,
     level: course.level,
   }
@@ -147,6 +147,7 @@ const EditCourseForm: React.FC<{ course: any }> = ({ course }) => {
                 <Input
                   type="text"
                   required
+                  disabled
                   error={
                     (touched || value !== initialValue) && Boolean(error)
                       ? error
@@ -182,7 +183,7 @@ const EditCourseForm: React.FC<{ course: any }> = ({ course }) => {
               <option value="EXPERT">EXPERT</option>
             </Field>
 
-            <Field type="checkbox" name="isPrivate" />
+            <Field type="checkbox" name="isPublished" />
 
             <div>
               <Image

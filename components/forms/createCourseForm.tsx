@@ -14,14 +14,14 @@ import { callApi } from '@/lib/hooks/useApi'
 type FormValues = Omit<CreateCourseInput, 'vimeoFolderUri'>
 
 const validationSchema = object({
-  name: string().required(),
+  name: string().required().max(20, "You've reached character limit"),
   slug: string()
     .matches(/^[a-z](-?[a-z])*$/, 'Must be a slug')
-    .max(70, "You've reached character limit")
+    .max(24, "You've reached character limit")
     .required(),
   description: string().max(140, "You've reached character limit").required(),
   coverFile: mixed(),
-  isPrivate: boolean().required(),
+  isPublished: boolean().required(),
   level: mixed().required(),
 })
 
@@ -34,22 +34,24 @@ const CreateCourseForm = () => {
     name: '',
     slug: '',
     description: '',
-    isPrivate: false,
+    isPublished: false,
     coverFile: undefined,
     level: 'ALL',
   }
 
+  const onNameChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    { setFieldValue }: any
+  ) => {
+    let name = e.target.value
+    setFieldValue('name', name)
+    let slug = slugger(name)
+    setFieldValue('slug', slug, false)
+  }
+
   const onSlugChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    {
-      setFieldValue,
-    }: {
-      setFieldValue: (
-        field: string,
-        value: any,
-        shouldValidate?: boolean
-      ) => void
-    }
+    { setFieldValue }: any
   ) => {
     let slug = e.target.value
     slug = slugger(slug)
@@ -58,15 +60,7 @@ const CreateCourseForm = () => {
 
   const onFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    {
-      setFieldValue,
-    }: {
-      setFieldValue: (
-        field: string,
-        value: any,
-        shouldValidate?: boolean
-      ) => void
-    }
+    { setFieldValue }: any
   ) => {
     if (!e.target.files) return
 
@@ -85,14 +79,7 @@ const CreateCourseForm = () => {
     }
   }
 
-  const handleSubmit = async (
-    values: FormValues,
-    {
-      setSubmitting,
-    }: {
-      setSubmitting: (isSubmitting: boolean) => void
-    }
-  ) => {
+  const handleSubmit = async (values: FormValues, { setSubmitting }: any) => {
     setCreateError(null)
 
     try {
@@ -105,7 +92,6 @@ const CreateCourseForm = () => {
       const apiResponse = await callApi('/courses', 'POST', body)
 
       if (apiResponse && apiResponse.result) {
-        console.log('apiResponse', apiResponse)
         await createCourse({
           variables: {
             input: {
@@ -152,6 +138,7 @@ const CreateCourseForm = () => {
                       : ''
                   }
                   {...field}
+                  onChange={(e) => onNameChange(e, { setFieldValue })}
                 />
               )}
             </Field>
@@ -198,7 +185,7 @@ const CreateCourseForm = () => {
               <option value="EXPERT">EXPERT</option>
             </Field>
 
-            <Field type="checkbox" name="isPrivate" />
+            <Field type="checkbox" name="isPublished" />
 
             <div>
               <Image

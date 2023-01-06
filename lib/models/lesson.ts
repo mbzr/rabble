@@ -9,15 +9,15 @@ export const createLesson = async (
   },
   userId: string
 ): Promise<any> => {
-  const { courseId, name, description, slug, isPrivate, video } = input
+  const { courseId, name, description, slug, video } = input
 
   const res = await db('lessons').returning('*').insert({
     courseId,
     name,
     slug,
     description,
-    isPrivate,
     video,
+    isPublished: false,
     createdAt: new Date(),
     modifiedAt: null,
     isArchived: false,
@@ -52,4 +52,10 @@ export const getLessonBySlug = async (slug: string) => {
   const rows = await db('lessons').where({ slug })
 
   return (rows && rows[0]) || null
+}
+
+export const getLessonsByCourse = async (courseId: string) => {
+  const rows = await db('lessons').where({ courseId })
+
+  return rows || null
 }

@@ -1,3 +1,5 @@
+import { LessonInfoType } from './lesson'
+
 export enum Level {
   ALL = 'ALL',
   BEGINNER = 'BEGINNER',
@@ -18,7 +20,7 @@ export interface Course {
   slug: string
   description: string
   coverPhoto: string | null
-  isPrivate: boolean
+  isPublished: boolean
   isArchived: boolean
   isPremium: boolean
   vimeoFolderUri: string
@@ -32,19 +34,19 @@ export type CourseInfoType = Pick<
   | 'slug'
   | 'description'
   | 'createdAt'
-  | 'isPrivate'
+  | 'isPublished'
   | 'isArchived'
   | 'coverPhoto'
   | 'vimeoFolderUri'
   | 'level'
->
+> & { lessons: LessonInfoType[] }
 
 export type CreateCourseInput = {
   name: string
   slug: string
   description: string
   coverFile?: object
-  isPrivate: boolean
+  isPublished: boolean
   vimeoFolderUri: string
   level: LevelStrings
 }
@@ -54,7 +56,7 @@ export type EditCourseInput = {
   slug: string
   description: string
   coverFile?: object
-  isPrivate: boolean
+  isPublished: boolean
   level: LevelStrings
   courseId: string
 }

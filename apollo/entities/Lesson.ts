@@ -1,6 +1,12 @@
 import { gql } from '@apollo/client'
 
 const Lesson = gql`
+  enum VideoStatus {
+    complete
+    error
+    in_progress
+  }
+
   type Video {
     id: Int
     uri: String
@@ -8,6 +14,7 @@ const Lesson = gql`
     height: Int
     size: Int
     duration: Int
+    status: VideoStatus
   }
 
   input VideoInput {
@@ -26,7 +33,7 @@ const Lesson = gql`
     name: String!
     slug: LowercaseString!
     description: String!
-    isPrivate: Boolean
+    isPublished: Boolean
     isArchived: Boolean
     course: Course
     video: Video!
@@ -38,12 +45,12 @@ const Lesson = gql`
     description: String!
     courseId: ID!
     video: VideoInput!
-    isPrivate: Boolean
   }
 
   input EditLessonInput {
     name: String
     description: String
+    isPublished: Boolean
     lessonId: ID!
   }
 

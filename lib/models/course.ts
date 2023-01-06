@@ -15,7 +15,7 @@ export const createCourse = async (
     description,
     slug,
     coverFile,
-    isPrivate,
+    isPublished,
     vimeoFolderUri,
     level,
   } = input
@@ -26,7 +26,7 @@ export const createCourse = async (
       name,
       description,
       slug,
-      isPrivate,
+      isPublished,
       vimeoFolderUri,
       level,
       createdAt: new Date(),
@@ -88,7 +88,7 @@ export const getCourseBySlug = async (slug: string) => {
 }
 
 export const editCourse = async ({ input }: any) => {
-  const { name, slug, description, coverFile, isPrivate, level, courseId } =
+  const { name, slug, description, coverFile, isPublished, level, courseId } =
     input
 
   const courseRecord = await db('courses')
@@ -103,7 +103,7 @@ export const editCourse = async ({ input }: any) => {
         name,
         slug,
         description,
-        isPrivate,
+        isPublished,
         level,
         modifiedAt: new Date(),
       })

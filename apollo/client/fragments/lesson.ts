@@ -10,7 +10,7 @@ export const lessonInfoFragment = gql`
     name
     slug
     description
-    isPrivate
+    isPublished
     isArchived
     course {
       ...courseInfo

@@ -7,10 +7,19 @@ export const courseInfoFragment = gql`
     slug
     description
     createdAt
-    isPrivate
+    isPublished
     isArchived
     coverPhoto
     vimeoFolderUri
     level
+    lessons {
+      id
+      name
+      slug
+      isPublished
+      video {
+        id
+      }
+    }
   }
 `

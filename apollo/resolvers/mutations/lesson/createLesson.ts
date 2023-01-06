@@ -14,8 +14,6 @@ export default ensureAuthenticated(async (_: any, args: any, ctx: any) => {
 
   const newLesson = await createLesson(args, ctx.user.id)
 
-  console.log('newLesson', newLesson)
-
   return await createLessonOwner(newLesson.id, ctx.user.id).then(
     () => newLesson
   )

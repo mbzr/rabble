@@ -2,7 +2,10 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 import { callVimeoApi } from '@/lib/vimeo/client'
 
-export async function uploadHandler(req: NextApiRequest, res: NextApiResponse) {
+export async function createUploadHandler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== 'POST') return res.status(404).end()
 
   try {
@@ -14,10 +17,12 @@ export async function uploadHandler(req: NextApiRequest, res: NextApiResponse) {
       {
         method: 'POST',
         params: {
+          // TODO: add support for other upload approaches
           upload: {
             approach: 'tus',
             size: fileSize,
           },
+          // TODO: add more fields, like privacy
           name,
           description,
           folder_uri: folderUri,
@@ -33,4 +38,4 @@ export async function uploadHandler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default uploadHandler
+export default createUploadHandler
