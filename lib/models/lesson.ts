@@ -59,3 +59,32 @@ export const getLessonsByCourse = async (courseId: string) => {
 
   return rows || null
 }
+
+export const editLesson = async ({ input }: any) => {
+  const { name, slug, description, isPublished, lessonId } = input
+
+  const lessonRecord = await db('lessons')
+    .where({ id: lessonId })
+    .then((result: any) => {
+      // console.log('result', result)
+      if (!result || result.length === 0) {
+        throw new Error('No lesson found.')
+      }
+
+      return Object.assign({}, result[0], {
+        name,
+        slug,
+        description,
+        isPublished,
+        modifiedAt: new Date(),
+      })
+    })
+
+  return await db('lessons')
+    .where({ id: lessonId })
+    .update({
+      ...lessonRecord,
+    })
+    .then((res: any) => (res && res[0]) || null)
+    .catch((err: any) => console.error(err))
+}

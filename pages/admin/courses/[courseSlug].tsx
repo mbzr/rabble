@@ -32,6 +32,30 @@ const CreateButton: React.FC<{ children: React.ReactNode; course: any }> = ({
   )
 }
 
+const EditLessonButton: React.FC<{
+  children: React.ReactNode
+  lesson: any
+}> = ({ children, lesson }) => {
+  const { dispatch } = useModal()
+
+  return (
+    <PrimaryButton
+      type="button"
+      onClick={() =>
+        dispatch({
+          type: 'OPEN_MODAL',
+          modalType: 'EDIT_LESSON_MODAL',
+          modalProps: {
+            lesson: lesson,
+          },
+        })
+      }
+    >
+      {children}
+    </PrimaryButton>
+  )
+}
+
 const AdminEditCoursePage = () => {
   const { course, loading, error } = useCourse()
 
@@ -50,7 +74,7 @@ const AdminEditCoursePage = () => {
         <ul>
           {course.lessons.map((lesson) => (
             <li key={lesson.id}>
-              <button>Edit</button>
+              <EditLessonButton lesson={lesson}>Edit</EditLessonButton>
               <button>Delete</button>
               <div>{lesson.name}</div>
             </li>

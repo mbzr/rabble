@@ -21,7 +21,7 @@ const CreateLessonModal: React.FC<CreateLessonFormProps> = (props) => {
     <Modal
       ariaHideApp={false}
       isOpen={isOpen}
-      contentLabel={'Login Modal'}
+      contentLabel={'Create Lesson Modal'}
       onRequestClose={() => dispatch({ type: 'CLOSE_MODAL' })}
       shouldCloseOnOverlayClick={true}
       style={styles}

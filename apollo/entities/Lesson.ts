@@ -49,6 +49,7 @@ const Lesson = gql`
 
   input EditLessonInput {
     name: String
+    slug: LowercaseString
     description: String
     isPublished: Boolean
     lessonId: ID!

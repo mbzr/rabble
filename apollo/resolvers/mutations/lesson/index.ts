@@ -1,10 +1,10 @@
 import createLesson from './createLesson'
-// import editLesson from './editLesson'
+import editLesson from './editLesson'
 
 const lessonMutations = {
   Mutation: {
     createLesson,
-    editLesson: () => null,
+    editLesson,
   },
 }
 

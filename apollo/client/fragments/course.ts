@@ -15,6 +15,7 @@ export const courseInfoFragment = gql`
     lessons {
       id
       name
+      description
       slug
       isPublished
       video {
