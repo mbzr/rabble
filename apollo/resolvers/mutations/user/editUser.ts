@@ -1,6 +1,6 @@
 import { EMAIL_ADDRESS_REGEX } from '@/lib/constants'
 import { editUser, getUserByEmail } from '@/lib/models/user'
-import { ensureAuthenticated } from '@/lib/utils/helpers'
+import { ensureAuthenticated } from '@/lib/utils/permissions'
 
 export default ensureAuthenticated(async (_: any, args: any, ctx: any) => {
   const { user } = ctx

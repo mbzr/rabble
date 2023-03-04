@@ -1,8 +1,10 @@
 import { gql, useMutation } from '@apollo/client'
 
 import { UserInfoType } from '@/lib/types/user'
-import userInfoFragment from '@/apollo/client/fragments/user/userInfo'
-import userSettingsFragment from '@/apollo/client/fragments/user/userSettings'
+import {
+  userInfoFragment,
+  userSettingsFragment,
+} from '@/apollo/client/fragments/user'
 
 interface Vars {
   input: {

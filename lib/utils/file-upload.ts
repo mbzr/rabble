@@ -19,7 +19,7 @@ export const uploadImage = async (
   const encoded = encodeURIComponent(sanitized)
 
   return new Promise((res) => {
-    // mimetype not in the validMediaType collection
+    // mimetype not in the ALLOWED_MIME_TYPES collection
     if (indexOf(ALLOWED_MIME_TYPES, toLower(mimetype)) < 0) {
       throw new Error(
         `Server has rejected the file with unsupported type ${mimetype}. Try uploading another image.`

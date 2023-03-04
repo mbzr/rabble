@@ -1,11 +1,8 @@
-import db from '../db'
+import db from '@/knex/db'
+import { CreateUserType, EditUserType } from '../types/user'
 import { uploadImage } from '../utils/file-upload'
 
-export const createUser = async ({
-  input,
-}: {
-  input: { email: string; password: string }
-}) => {
+export const createUser = async ({ input }: { input: CreateUserType }) => {
   const { email, password } = input
 
   const displayName = email.substring(0, email.lastIndexOf('@'))
@@ -24,7 +21,13 @@ export const createUser = async ({
     role: 'MEMBER',
   })
 
-  return (res && res[0]) || null
+  const user: any = res && res[0]
+
+  if (user) {
+    await createUserSettings(user.id)
+  }
+
+  return user || null
 }
 
 export const getUserByEmail = async (email: string) => {
@@ -39,14 +42,17 @@ export const getUserById = async (id: string) => {
   return (rows && rows[0]) || null
 }
 
-export const editUser = async (args: any, userId: string) => {
-  const { displayName, email, file } = args.input
+export const editUser = async (
+  { input }: { input: EditUserType },
+  userId: string
+) => {
+  const { displayName, email, file } = input
 
   return await db('users')
     .where({ id: userId })
     .then((result: any) => {
       // console.log('result', result)
-      if (!result) {
+      if (!result || result.length === 0) {
         throw Error('No user found.')
       }
 

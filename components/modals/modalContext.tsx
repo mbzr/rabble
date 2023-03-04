@@ -2,6 +2,8 @@ import React from 'react'
 
 import LoginModal from './loginModal'
 import SignupModal from './signupModal'
+import CreateLessonModal from './createLessonModal'
+import EditLessonModal from './editLessonModal'
 
 type State = {
   modalType: string | null
@@ -20,7 +22,7 @@ interface ModalProviderProps {
 }
 
 type ModalComponentType = {
-  [key: string]: React.ComponentType
+  [key: string]: React.ComponentType<any>
 }
 
 const modalState: State = {
@@ -69,6 +71,8 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
 const MODAL_COMPONENTS: ModalComponentType = {
   LOGIN_MODAL: LoginModal,
   SIGNUP_MODAL: SignupModal,
+  CREATE_LESSON_MODAL: CreateLessonModal,
+  EDIT_LESSON_MODAL: EditLessonModal,
 }
 
 export const useModal = () => {

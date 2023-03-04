@@ -1,0 +1,62 @@
+import { gql } from '@apollo/client'
+
+const Course = gql`
+  enum Level {
+    ALL
+    BEGINNER
+    INTERMEDIATE
+    EXPERT
+  }
+
+  type Course {
+    id: ID!
+    createdAt: Date
+    modifiedAt: Date
+    name: String!
+    slug: LowercaseString!
+    description: String!
+    coverPhoto: String
+    isPublished: Boolean
+    isArchived: Boolean
+    isPremium: Boolean
+    owner: User
+    vimeoFolderUri: String
+    lessons: [Lesson]
+    lessonCount: Int
+    totalDuration: Int
+    level: Level
+    rating: Int
+    memberCount: Int
+  }
+
+  input CreateCourseInput {
+    name: String!
+    slug: LowercaseString!
+    description: String!
+    coverFile: Upload
+    isPublished: Boolean
+    vimeoFolderUri: String!
+    level: Level
+  }
+
+  input EditCourseInput {
+    name: String
+    slug: LowercaseString
+    description: String
+    coverFile: Upload
+    isPublished: Boolean
+    level: Level
+    courseId: ID!
+  }
+
+  extend type Query {
+    course(id: ID, slug: LowercaseString): Course
+  }
+
+  extend type Mutation {
+    createCourse(input: CreateCourseInput!): Course
+    editCourse(input: EditCourseInput!): Course
+  }
+`
+
+export default Course

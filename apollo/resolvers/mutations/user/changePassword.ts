@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 
-import { ensureAuthenticated } from '@/lib/utils/helpers'
+import { ensureAuthenticated } from '@/lib/utils/permissions'
 import { changePassword } from '@/lib/models/user'
 
 export default ensureAuthenticated(async (_: any, args: any, ctx: any) => {

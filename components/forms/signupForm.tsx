@@ -9,7 +9,7 @@ import useApi from '@/lib/hooks/useApi'
 import { AuthFormValues, authValidationSchema, login } from '@/lib/auth/helpers'
 
 const SignupForm: React.FC<{}> = () => {
-  const [, callApi] = useApi()
+  const [callApi] = useApi()
 
   const initialValues: AuthFormValues = {
     email: '',
@@ -20,14 +20,12 @@ const SignupForm: React.FC<{}> = () => {
     try {
       actions.setSubmitting(true)
 
-      const result = await callApi(`/auth/signup`, 'POST', {
+      await callApi(`/auth/signup`, 'POST', {
         email: values.email,
         password: values.password,
       })
-      5
-      if (!result.error) {
-        await login(values)
-      }
+
+      await login(values)
     } catch (err: any) {
       actions.setStatus({ error: err.message ?? 'Something went wrong.' })
     } finally {
