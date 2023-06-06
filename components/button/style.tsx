@@ -5,13 +5,13 @@ import theme from '@/lib/theme'
 import { Size } from './index'
 
 export const StyledAnchorLink = styled.a`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   flex: none;
 `
 
 export const StyledRouterLink = styled(Link)`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   flex: none;
 `
@@ -29,18 +29,18 @@ export const StyledButton = styled.button<ButtonProps>`
 
   color: ${theme.colors.bodyColor};
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 600;
 
-  display: flex;
+  display: inline-flex;
   flex: none;
   justify-content: center;
   align-items: center;
   text-align: center;
   letter-spacing: 0.2px;
-  border-radius: 6px;
+  border-radius: 50px;
   width: ${({ size }) =>
-    size == 'large' ? '210px' : size == 'full' ? '100%' : '150px'};
-  height: ${({ size }) => (size == 'large' ? '50px' : '40px')};
+    size == 'large' ? '200px' : size == 'full' ? '100%' : '150px'};
+  height: 55px;
   cursor: pointer;
   ${({ disabled }) =>
     disabled &&
@@ -57,4 +57,9 @@ export const StyledPrimaryButton = styled(StyledButton)`
 
 export const StyledSecondaryOutlineButton = styled(StyledButton)`
   border: 1px solid ${theme.colors.grey.main};
+`
+
+export const StyledWhiteButton = styled(StyledButton)`
+  background-color: ${theme.colors.common.white};
+  color: ${theme.colors.bodyColor};
 `

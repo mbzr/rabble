@@ -6,6 +6,7 @@ import {
   StyledAnchorLink,
   StyledRouterLink,
   StyledPrimaryButton,
+  StyledWhiteButton,
 } from './style'
 
 type To = {
@@ -70,3 +71,6 @@ export const Button: React.FC<ButtonProps> = (props) =>
 
 export const PrimaryButton: React.FC<ButtonProps> = (props) =>
   handleAnchorWrapping(StyledPrimaryButton, props)
+
+export const WhiteButton: React.FC<ButtonProps> = (props) =>
+  handleAnchorWrapping(StyledWhiteButton, props)

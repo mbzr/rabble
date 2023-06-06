@@ -40,10 +40,8 @@ const GlobalStyles = createGlobalStyle`
     outline: none;
   }
 
-  a,
   img,
-  li,
-  span {
+  li {
     display: block;
   }
 

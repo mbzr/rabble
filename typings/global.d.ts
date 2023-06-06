@@ -15,3 +15,5 @@ declare module 'next' {
     filePayload: GraphQLOperation | GraphQLOperation[]
   }
 }
+
+declare module '@heroicons/*';

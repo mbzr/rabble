@@ -5,6 +5,7 @@ declare module 'styled-components' {
     bodyFont: string
     colors: {
       bodyColor: string
+      primary: string
       common: {
         black: string
         white: string

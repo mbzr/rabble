@@ -1,22 +1,12 @@
-import React from 'react'
-import Link from 'next/link'
-
-import { Container } from '@/components/globals'
-import { StyledFooter, Inner } from './style'
-
-const Footer: React.FC<{}> = () => {
+const Footer = () => {
   return (
-    <StyledFooter>
-      <Container>
-        <Inner>
-          <p>Copyright &copy; 2022. rabble academy. All rights reserved.</p>
-          <nav>
-            <Link href="/privacy-policy">Privacy policy</Link>
-            <Link href="/terms">Terms &amp; Conditions</Link>
-          </nav>
-        </Inner>
-      </Container>
-    </StyledFooter>
+    <footer className="bg-gray-800">
+      <div className="max-w-7xl mx-auto py-6">
+        <p className="text-center text-base text-gray-400">
+          &copy; 2023 rabble, Inc. All rights reserved.
+        </p>
+      </div>
+    </footer>
   )
 }
 

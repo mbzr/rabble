@@ -19,6 +19,8 @@
   "dependencies": {
     "@apollo/client": "^3.7.1",
     "@graphql-tools/schema": "^9.0.7",
+    "@headlessui/react": "^1.7.14",
+    "@heroicons/react": "^2.0.18",
     "@imgix/js-core": "^3.7.0",
     "@types/express-session": "^1.17.5",
     "@types/graphql-upload": "^8.0.12",
@@ -57,6 +59,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.3",
     "@types/apollo-upload-client": "^17.0.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/knex": "^0.16.1",
@@ -66,9 +69,12 @@
     "@types/react-dom": "18.0.8",
     "@types/react-modal": "^3.13.1",
     "@types/uuid": "^8.3.4",
+    "autoprefixer": "^10.4.14",
     "eslint": "8.26.0",
     "eslint-config-next": "13.0.0",
     "eslint-config-prettier": "^8.5.0",
+    "postcss": "^8.4.23",
+    "tailwindcss": "^3.3.2",
     "ts-node": "^10.9.1",
     "typescript": "4.8.4"
   }

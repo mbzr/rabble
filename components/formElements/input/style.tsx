@@ -15,15 +15,16 @@ export const StyledInput = styled.input`
   border: 1px solid ${theme.colors.grey.main};
   outline: 0;
   box-shadow: none;
-  border-radius: 8px;
+  border-radius: 50px;
 
   width: 100%;
-  height: 50px;
+  height: 55px;
 
   background-color: ${theme.colors.grey.light};
   color: inherit;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
+  padding-top: 18px;
   padding-left: 15px;
 
   ::placeholder,

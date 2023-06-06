@@ -1,9 +1,8 @@
 import React from 'react'
 
-import Link from 'next/link'
 import styled from 'styled-components'
 
-export const StyledLogo = styled(Link)`
+export const StyledLogo = styled.div`
   font-style: normal;
   font-weight: 900;
   font-size: 24px;
@@ -12,11 +11,11 @@ export const StyledLogo = styled(Link)`
   align-items: center;
   letter-spacing: 0.1px;
 
-  color: #ffffff;
+  color: currentColor;
 `
 
 const Logo: React.FC<{}> = () => {
-  return <StyledLogo href="/">rabble. academy</StyledLogo>
+  return <StyledLogo>RABBLE</StyledLogo>
 }
 
 export default Logo

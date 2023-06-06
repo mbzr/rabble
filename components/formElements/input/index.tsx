@@ -1,13 +1,5 @@
 import React from 'react'
 
-import {
-  StyledField,
-  StyledLabel,
-  StyledLabelText,
-  StyledError,
-} from '../style'
-import { StyledInput } from './style'
-
 interface InputProps {
   id?: string
   name?: string
@@ -18,11 +10,13 @@ interface InputProps {
   value?: any
   placeholder?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (event: React.ChangeEvent<HTMLInputElement>) => void
   autoFocus?: boolean
   disabled?: boolean
   required?: boolean
   error?: string
   autoComplete?: string
+  helpText?: string
 }
 
 const Input: React.FC<InputProps> = ({
@@ -34,17 +28,26 @@ const Input: React.FC<InputProps> = ({
   defaultValue,
   placeholder,
   onChange,
+  onBlur,
   autoComplete,
   required,
   disabled,
   error,
+  helpText,
   ...rest
 }) => {
   return (
-    <StyledField {...rest}>
-      <StyledLabel>
-        {label && <StyledLabelText>{label}</StyledLabelText>}
-        <StyledInput
+    <div>
+      <label
+        htmlFor="email"
+        className="block text-sm font-medium text-gray-700"
+      >
+        {label ? label : 'No label'}
+      </label>
+      <div className="mt-1">
+        <input
+          className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+          aria-describedby="email-description"
           id={id}
           name={name}
           type={type}
@@ -52,13 +55,28 @@ const Input: React.FC<InputProps> = ({
           disabled={disabled}
           placeholder={placeholder}
           defaultValue={defaultValue}
-          onChange={onChange}
+          onChange={(e) => {
+            if (onChange) onChange(e)
+          }}
+          onBlur={(e) => {
+            if (onBlur) onBlur(e)
+          }}
           autoComplete={autoComplete}
           required={required}
         />
-      </StyledLabel>
-      {error && <StyledError>{error}</StyledError>}
-    </StyledField>
+      </div>
+
+      {error && (
+        <p className="mt-2 text-sm text-red-600">
+          {error}
+        </p>
+      )}
+      {helpText && (
+        <p className="mt-2 text-sm text-gray-500">
+          We'll only use this for spam.
+        </p>
+      )}
+    </div>
   )
 }
 

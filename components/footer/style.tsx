@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import theme from '@/lib/theme'
 
 export const StyledFooter = styled.footer`
-  background-color: ${theme.colors.brand.dark};
+  background-color: #404040;
   color: ${theme.colors.common.white};
 
   p,
