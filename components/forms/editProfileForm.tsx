@@ -209,7 +209,7 @@ const EditProfileForm: React.FC<Props> = ({ user }) => {
                   </label>
                 </div>
 
-                <div className="sm:col-span-6">
+                {/* <div className="sm:col-span-6">
                   <label
                     htmlFor="cover-photo"
                     className="block text-sm font-medium text-gray-700"
@@ -252,7 +252,7 @@ const EditProfileForm: React.FC<Props> = ({ user }) => {
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
               <div className="pt-5">
                 <div className="flex justify-end">
