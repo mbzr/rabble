@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import Image from 'next/image'
 import { Formik, Form, Field, FieldProps, FormikErrors } from 'formik'
 import { string, object, mixed } from 'yup'
@@ -29,6 +29,7 @@ const validationSchema = object({
 })
 
 const EditProfileForm: React.FC<Props> = ({ user }) => {
+  const profilePhotoRef = useRef<HTMLImageElement>(null)
   const [isSubmitted, setIsSubmitted] = React.useState(false)
   const [editUser] = useEditUserMutation()
 
@@ -56,6 +57,9 @@ const EditProfileForm: React.FC<Props> = ({ user }) => {
     let file = e.target.files[0]
 
     if (!file) return
+    if (profilePhotoRef && profilePhotoRef.current) {
+      profilePhotoRef.current.src = URL.createObjectURL(file)
+    }
 
     reader.onloadend = () => {
       setFieldValue('file', file)
@@ -186,8 +190,9 @@ const EditProfileForm: React.FC<Props> = ({ user }) => {
                     ></input>
                     <div className="mt-1 flex items-center">
                       <span className="h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                        <Image
-                          priority
+                        <img
+                          // priority
+                          ref={profilePhotoRef}
                           src={user.profilePhoto || '/default-avatar.png'}
                           alt="profile picture"
                           width={48}
