@@ -5,7 +5,6 @@ import { string, object, ref } from 'yup'
 import { Input } from '@/components/formElements'
 import useChangePasswordMutation from '@/apollo/client/mutations/user/useChangePasswordMutation'
 import { classNames } from '@/lib/utils/helpers'
-import { set } from 'lodash'
 
 interface FormValues {
   currentPassword: string

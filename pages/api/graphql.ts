@@ -13,7 +13,7 @@ const apolloServer = new ApolloServer({
   debug: true,
   introspection: true,
   context: async (ctx) => {
-    const user = await getServerSession(ctx)
+    const { user } = await getServerSession(ctx)
 
     // if (!user) {
     //   throw new Error('Unauthorized. You must be logged in.')

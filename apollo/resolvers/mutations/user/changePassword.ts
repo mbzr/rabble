@@ -1,11 +1,17 @@
 import bcrypt from 'bcryptjs'
 
 import { ensureAuthenticated } from '@/lib/utils/permissions'
-import { changePassword } from '@/lib/models/user'
+import { changePassword, getUserByEmail } from '@/lib/models/user'
 
 export default ensureAuthenticated(async (_: any, args: any, ctx: any) => {
   const { input } = args
-  const { user } = ctx
+  const { user: ctxUser } = ctx
+
+  const user: any = await getUserByEmail(ctxUser.email)
+
+  if (!user) {
+    throw new Error('No user found')
+  }
 
   const valid = await bcrypt.compare(input.currentPassword, user.password)
 
