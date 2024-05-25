@@ -10,7 +10,7 @@ const knexConfig = {
   client: 'pg',
   connection:
     process.env.NODE_ENV === 'production'
-      ? PG_CONNECTION_STRING
+      ? { connectionString: PG_CONNECTION_STRING }
       : {
           host: PG_DB_HOST,
           database: PG_DB_NAME,
