@@ -9,6 +9,8 @@ const schema = z.object({
   RABBLE_AWS_SECRET_ACCESS_KEY: z.string().min(1),
   RABBLE_AWS_REGION: z.string().min(1),
   RABBLE_S3_BUCKET: z.string().min(1),
+  BETTER_AUTH_SECRET: z.string().min(32),
+  BETTER_AUTH_URL: z.url(),
 })
 
 const parsed = schema.safeParse(process.env)

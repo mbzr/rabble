@@ -19,6 +19,8 @@ jobs:
       RABBLE_AWS_SECRET_ACCESS_KEY: ci-placeholder
       RABBLE_AWS_REGION: me-south-1
       RABBLE_S3_BUCKET: rabble-academy
+      BETTER_AUTH_SECRET: ci-placeholder-secret-at-least-32-characters
+      BETTER_AUTH_URL: http://localhost:3000
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5

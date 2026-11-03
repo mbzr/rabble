@@ -23,6 +23,8 @@
     "*.{json,md,yml,yaml,css}": "prettier --write"
   },
   "dependencies": {
+    "@better-auth/drizzle-adapter": "^1.7.15",
+    "better-auth": "^1.7.15",
     "drizzle-orm": "1.0.0-rc.5",
     "next": "16.4.4",
     "next-intl": "^4.14.9",
