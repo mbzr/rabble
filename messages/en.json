@@ -1,4 +1,7 @@
 {
-    "Metadata": { "title": "Rabble", "description": "Short video courses for frontend developers." },
-    "HomePage": { "title": "Welcome to Rabble" }
-  }
+  "Metadata": {
+    "title": "Rabble",
+    "description": "Short video courses for frontend developers."
+  },
+  "HomePage": { "title": "Welcome to Rabble" }
+}
