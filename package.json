@@ -10,7 +10,10 @@
     "typecheck": "next typegen && tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "lint-staged": {
     "*.{ts,tsx,js,mjs}": [
@@ -20,8 +23,10 @@
     "*.{json,md,yml,yaml,css}": "prettier --write"
   },
   "dependencies": {
+    "drizzle-orm": "1.0.0-rc.5",
     "next": "16.4.4",
     "next-intl": "^4.14.9",
+    "pg": "^8.23.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "zod": "^4.6.7"
@@ -29,8 +34,10 @@
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^24.19.2",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "1.0.0-rc.5",
     "eslint": "^9",
     "eslint-config-next": "16.4.4",
     "eslint-config-prettier": "^10.1.8",
@@ -39,6 +46,7 @@
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4.3.4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   },
   "engines": {
