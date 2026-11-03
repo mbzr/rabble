@@ -1,30 +1,34 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/apollo/*": ["apollo/*"],
-      "@/components/*": ["components/*"],
-      "@/graphql/*": ["graphql/*"],
-      "@/fragments/*": ["graphql/fragments/*"],
-      "@/types/*": ["graphql/types/*"],
-      "@/lib/*": ["lib/*"],
-      "@/knex/*": ["knex/*"]
-    },
-    "module": "es2020",
-    "target": "es2020",
+    "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
-  "include": ["next-env.d.ts", "typings", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
   "exclude": ["node_modules"]
 }
