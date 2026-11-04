@@ -20,7 +20,15 @@
     "signingIn": "Signing in…",
     "signInLink": "Sign in",
     "haveAccount": "Already have an account?",
-    "noAccount": "New to Rabble?"
+    "noAccount": "New to Rabble?",
+    "checkEmailTitle": "Check your email",
+    "checkEmailBody": "We've sent you a link to confirm your email. If it doesn't arrive in a few minutes, check your spam folder, or log in to get a new one.",
+    "emailConfirmedTitle": "Your email is confirmed",
+    "emailConfirmedBody": "You're signed in and ready to go.",
+    "linkExpiredTitle": "This link has expired",
+    "linkExpiredBody": "Confirmation links work once and only for a limited time. Log in and we'll send you a new one.",
+    "goHome": "Go to Rabble",
+    "goToLogin": "Log in"
   },
   "Errors": {
     "generic": "Something went wrong. Please try again.",
@@ -29,5 +37,15 @@
     "invalidPassword": "Enter a password.",
     "passwordTooShort": "Use at least 10 characters.",
     "passwordTooLong": "That password is too long."
+  },
+  "Emails": {
+    "verifyEmail": {
+      "subject": "Confirm your email for Rabble",
+      "body": "Hi,\n\nConfirm your email to finish creating your Rabble account:\n{url}\n\nIf you didn't sign up, you can ignore this email."
+    },
+    "resetPassword": {
+      "subject": "Reset your Rabble password",
+      "body": "Hi,\n\nUse this link to choose a new password:\n{url}\n\nIf you didn't ask for this, you can ignore this email."
+    }
   }
 }

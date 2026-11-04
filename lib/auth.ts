@@ -6,6 +6,35 @@ import { db } from '@/db'
 import { env } from '@/env'
 import { ac, roles } from './auth-permissions'
 import * as authSchema from '@/db/schema/auth'
+import { after } from 'next/server'
+import { createTranslator } from 'next-intl'
+import ar from '@/messages/ar.json'
+import en from '@/messages/en.json'
+import { sendEmail } from './email'
+import { logError } from './log'
+
+const emailMessages = { en, ar }
+
+const sendAuthEmail = (
+  user: { email: string; locale?: unknown },
+  kind: 'verifyEmail' | 'resetPassword',
+  url: string,
+) => {
+  const locale = user.locale === 'ar' ? 'ar' : 'en'
+  const t = createTranslator({
+    locale,
+    messages: emailMessages[locale],
+    namespace: 'Emails',
+  })
+
+  after(() =>
+    sendEmail({
+      to: user.email,
+      subject: t(`${kind}.subject`),
+      text: t(`${kind}.body`, { url }),
+    }).catch((error) => logError(error, { kind })),
+  )
+}
 
 export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
@@ -16,6 +45,16 @@ export const auth = betterAuth({
     enabled: true,
     minPasswordLength: 10,
     maxPasswordLength: 128,
+    requireEmailVerification: true,
+    revokeSessionsOnPasswordReset: true,
+    sendResetPassword: async ({ user, url }) =>
+      sendAuthEmail(user, 'resetPassword', url),
+  },
+  emailVerification: {
+    sendOnSignup: true,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) =>
+      sendAuthEmail(user, 'verifyEmail', url),
   },
   user: {
     additionalFields: {
@@ -35,6 +74,8 @@ export const auth = betterAuth({
     customRules: {
       '/sign-in/email': { window: 60, max: 5 },
       '/sign-up/email': { window: 600, max: 3 },
+      '/request-password-reset': { window: 600, max: 3 },
+      '/send-verification-email': { window: 600, max: 3 },
     },
   },
   plugins: [

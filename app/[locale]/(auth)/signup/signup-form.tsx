@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Link, useRouter } from '@/i18n/navigation'
 import { authClient } from '@/lib/auth-client'
@@ -12,6 +12,7 @@ export const SignupForm = () => {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
+  const locale = useLocale()
 
   async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -23,6 +24,8 @@ export const SignupForm = () => {
       name: String(form.get('name')),
       email: String(form.get('email')),
       password: String(form.get('password')),
+      locale,
+      callbackURL: `/${locale}/verify-email`,
     })
 
     setPending(false)
@@ -30,8 +33,7 @@ export const SignupForm = () => {
       setError(tErrors(authErrorKey(error.code)))
       return
     }
-    router.push('/')
-    router.refresh()
+    router.push('/verify-email')
   }
 
   return (
