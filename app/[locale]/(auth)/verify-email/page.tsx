@@ -20,42 +20,43 @@ const VerifyEmailStatus = async ({
 
   if (error) {
     return (
-      <>
-        <h1 className="text-2xl font-semibold">{t('linkExpiredTitle')}</h1>
-        <p>{t('linkExpiredBody')}</p>
-        <Link href="/login" className="underline">
+      <div className="flex flex-col gap-6">
+        <h1 className="text-3xl font-semibold">{t('linkExpiredTitle')}</h1>
+        <p className="text-muted-foreground">{t('linkExpiredBody')}</p>
+        <Link
+          href="/login"
+          className="text-primary underline underline-offset-4"
+        >
           {t('goToLogin')}
         </Link>
-      </>
+      </div>
     )
   }
 
   if (currentUser?.emailVerified) {
     return (
-      <>
-        <h1 className="text-2xl font-semibold">{t('emailConfirmedTitle')}</h1>
-        <p>{t('emailConfirmedBody')}</p>
-        <Link href="/" className="underline">
+      <div className="flex flex-col gap-6">
+        <h1 className="text-3xl font-semibold">{t('emailConfirmedTitle')}</h1>
+        <p className="text-muted-foreground">{t('emailConfirmedBody')}</p>
+        <Link href="/" className="text-primary underline underline-offset-4">
           {t('goHome')}
         </Link>
-      </>
+      </div>
     )
   }
 
   return (
-    <>
-      <h1 className="text-2xl font-semibold">{t('checkEmailTitle')}</h1>
-      <p>{t('checkEmailBody')}</p>
-    </>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-3xl font-semibold">{t('checkEmailTitle')}</h1>
+      <p className="text-muted-foreground">{t('checkEmailBody')}</p>
+    </div>
   )
 }
 
 const VerifyEmailPage = ({ searchParams }: VerifyEmailPageProps) => (
-  <main className="flex max-w-prose flex-col gap-4 p-8">
-    <Suspense fallback={null}>
-      <VerifyEmailStatus searchParams={searchParams} />
-    </Suspense>
-  </main>
+  <Suspense fallback={null}>
+    <VerifyEmailStatus searchParams={searchParams} />
+  </Suspense>
 )
 
 export default VerifyEmailPage

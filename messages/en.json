@@ -64,5 +64,10 @@
       "subject": "Reset your Rabble password",
       "body": "Hi,\n\nUse this link to choose a new password:\n{url}\n\nIf you didn't ask for this, you can ignore this email."
     }
+  },
+  "Header": {
+    "mainNav": "Main",
+    "courses": "Courses",
+    "switchLanguage": "العربية"
   }
 }

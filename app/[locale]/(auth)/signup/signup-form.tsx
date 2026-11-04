@@ -5,6 +5,15 @@ import { useState } from 'react'
 import { Link, useRouter } from '@/i18n/navigation'
 import { authClient } from '@/lib/auth-client'
 import { authErrorKey } from '@/lib/auth-error'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 
 export const SignupForm = () => {
   const t = useTranslations('Auth')
@@ -37,67 +46,65 @@ export const SignupForm = () => {
   }
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className="flex max-w-sm flex-col gap-4">
-        <h1 className="text-2xl font-semibold">{t('signUpTitle')}</h1>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <h1 className="text-3xl font-semibold">{t('signUpTitle')}</h1>
 
-        <label className="flex flex-col gap-1">
-          {t('name')}
-          <input
-            name="name"
-            required
-            autoComplete="name"
-            className="rounded border px-3 py-2"
-          />
-        </label>
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-        <label className="flex flex-col gap-1">
-          {t('email')}
-          <input
+      <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor="name">{t('name')}</FieldLabel>
+          <Input id="name" name="name" required autoComplete="name" />
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="email">{t('email')}</FieldLabel>
+          <Input
+            id="email"
             name="email"
             type="email"
             required
             autoComplete="email"
-            className="rounded border px-3 py-2"
           />
-        </label>
-
-        <label className="flex flex-col gap-1">
-          {t('password')}
-          <input
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="password">{t('password')}</FieldLabel>
+          <Input
+            id="password"
             name="password"
             type="password"
             required
             minLength={10}
             autoComplete="new-password"
             aria-describedby="password-hint"
-            className="rounded border px-3 py-2"
           />
-          <span id="password-hint" className="text-sm text-gray-600">
+          <FieldDescription id="password-hint">
             {t('passwordHint')}
-          </span>
-        </label>
+          </FieldDescription>
+        </Field>
+      </FieldGroup>
 
-        {error && (
-          <p role="alert" className="text-red-700">
-            {error}
-          </p>
-        )}
+      <Button
+        type="submit"
+        disabled={pending}
+        aria-busy={pending}
+        className="w-full"
+      >
+        {pending ? t('signingUp') : t('signUp')}
+      </Button>
 
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
-        >
-          {pending ? t('signingUp') : t('signUp')}
-        </button>
-      </form>
-      <p>
+      <p className="text-muted-foreground text-center text-sm">
         {t('haveAccount')}{' '}
-        <Link href="/login" className="underline">
+        <Link
+          href="/login"
+          className="text-primary underline underline-offset-4"
+        >
           {t('signInLink')}
         </Link>
       </p>
-    </>
+    </form>
   )
 }

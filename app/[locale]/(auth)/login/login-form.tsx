@@ -5,6 +5,10 @@ import { useState } from 'react'
 import { Link, useRouter } from '@/i18n/navigation'
 import { authClient } from '@/lib/auth-client'
 import { authErrorKey } from '@/lib/auth-error'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 
 export const LoginForm = () => {
   const t = useTranslations('Auth')
@@ -34,50 +38,56 @@ export const LoginForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex max-w-sm flex-col gap-4">
-      <h1 className="text-2xl font-semibold">{t('signInTitle')}</h1>
-
-      <label className="flex flex-col gap-1">
-        {t('email')}
-        <input
-          name="email"
-          type="email"
-          required
-          autoComplete="email"
-          className="rounded border px-3 py-2"
-        />
-      </label>
-
-      <label className="flex flex-col gap-1">
-        {t('password')}
-        <input
-          name="password"
-          type="password"
-          required
-          autoComplete="current-password"
-          className="rounded border px-3 py-2"
-        />
-      </label>
-
-      <Link href="/forgot-password" className="underline">
-        {t('forgotPassword')}
-      </Link>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <h1 className="text-3xl font-semibold">{t('signInTitle')}</h1>
 
       {error && (
-        <p role="alert" className="text-red-700">
-          {error}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
-      <button
+      <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor="email">{t('email')}</FieldLabel>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+          />
+        </Field>
+        <Field>
+          <div className="flex items-center justify-between gap-4">
+            <FieldLabel htmlFor="password">{t('password')}</FieldLabel>
+            <Link
+              href="/forgot-password"
+              className="text-primary text-xs underline underline-offset-4"
+            >
+              {t('forgotPassword')}
+            </Link>
+          </div>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            required
+            autoComplete="current-password"
+          />
+        </Field>
+      </FieldGroup>
+
+      <Button
         type="submit"
         disabled={pending}
-        className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
+        aria-busy={pending}
+        className="w-full"
       >
         {pending ? t('signingIn') : t('signIn')}
-      </button>
+      </Button>
 
-      <p>
+      <p className="text-muted-foreground text-center text-sm">
         {t('noAccount')}{' '}
         <Link href="/signup" className="underline">
           {t('signUpLink')}

@@ -5,6 +5,10 @@ import { useState } from 'react'
 import { Link } from '@/i18n/navigation'
 import { authClient } from '@/lib/auth-client'
 import { authErrorKey } from '@/lib/auth-error'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 
 export const ForgotPasswordForm = () => {
   const t = useTranslations('Auth')
@@ -35,10 +39,13 @@ export const ForgotPasswordForm = () => {
 
   if (sent) {
     return (
-      <div role="status" className="flex max-w-sm flex-col gap-4">
-        <h1 className="text-2xl font-semibold">{t('resetSentTitle')}</h1>
-        <p>{t('resetSentBody')}</p>
-        <Link href="/login" className="underline">
+      <div role="status" className="flex flex-col gap-6">
+        <h1 className="text-3xl font-semibold">{t('resetSentTitle')}</h1>
+        <p className="text-muted-foreground">{t('resetSentBody')}</p>
+        <Link
+          href="/login"
+          className="text-primary underline underline-offset-4"
+        >
           {t('backToLogin')}
         </Link>
       </div>
@@ -46,38 +53,46 @@ export const ForgotPasswordForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex max-w-sm flex-col gap-4">
-      <h1 className="text-2xl font-semibold">{t('forgotPasswordTitle')}</h1>
-      <p>{t('forgotPasswordBody')}</p>
-
-      <label className="flex flex-col gap-1">
-        {t('email')}
-        <input
-          name="email"
-          type="email"
-          required
-          autoComplete="email"
-          className="rounded border px-3 py-2"
-        />
-      </label>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <h1 className="text-3xl font-semibold">{t('forgotPasswordTitle')}</h1>
+      <p className="text-muted-foreground">{t('forgotPasswordBody')}</p>
 
       {error && (
-        <p role="alert" className="text-red-700">
-          {error}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
-      <button
+      <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor="email">{t('email')}</FieldLabel>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+          />
+        </Field>
+      </FieldGroup>
+
+      <Button
         type="submit"
         disabled={pending}
-        className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
+        aria-busy={pending}
+        className="w-full"
       >
         {pending ? t('sendingResetLink') : t('sendResetLink')}
-      </button>
+      </Button>
 
-      <Link href="/login" className="underline">
-        {t('backToLogin')}
-      </Link>
+      <p className="text-center text-sm">
+        <Link
+          href="/login"
+          className="text-primary underline underline-offset-4"
+        >
+          {t('backToLogin')}
+        </Link>
+      </p>
     </form>
   )
 }

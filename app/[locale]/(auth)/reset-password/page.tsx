@@ -21,10 +21,13 @@ const ResetPasswordContent = async ({
 
   if (!token) {
     return (
-      <div className="flex max-w-sm flex-col gap-4">
-        <h1 className="text-2xl font-semibold">{t('resetLinkInvalidTitle')}</h1>
-        <p>{t('resetLinkInvalidBody')}</p>
-        <Link href="/forgot-password" className="underline">
+      <div className="flex flex-col gap-6">
+        <h1 className="text-3xl font-semibold">{t('resetLinkInvalidTitle')}</h1>
+        <p className="text-muted-foreground">{t('resetLinkInvalidBody')}</p>
+        <Link
+          href="/forgot-password"
+          className="text-primary underline underline-offset-4"
+        >
           {t('requestNewLink')}
         </Link>
       </div>
@@ -35,11 +38,9 @@ const ResetPasswordContent = async ({
 }
 
 const ResetPasswordPage = ({ searchParams }: ResetPasswordPageProps) => (
-  <main className="p-8">
-    <Suspense fallback={null}>
-      <ResetPasswordContent searchParams={searchParams} />
-    </Suspense>
-  </main>
+  <Suspense fallback={null}>
+    <ResetPasswordContent searchParams={searchParams} />
+  </Suspense>
 )
 
 export default ResetPasswordPage

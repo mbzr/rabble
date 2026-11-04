@@ -5,6 +5,15 @@ import { useState } from 'react'
 import { Link } from '@/i18n/navigation'
 import { authClient } from '@/lib/auth-client'
 import { authErrorKey } from '@/lib/auth-error'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
 
 interface ResetPasswordFormProps {
   token: string
@@ -38,10 +47,13 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
 
   if (sent) {
     return (
-      <div role="status" className="flex max-w-sm flex-col gap-4">
-        <h1 className="text-2xl font-semibold">{t('passwordUpdatedTitle')}</h1>
-        <p>{t('passwordUpdatedBody')}</p>
-        <Link href="/login" className="underline">
+      <div role="status" className="flex flex-col gap-6">
+        <h1 className="text-3xl font-semibold">{t('passwordUpdatedTitle')}</h1>
+        <p className="text-muted-foreground">{t('passwordUpdatedBody')}</p>
+        <Link
+          href="/login"
+          className="text-primary underline underline-offset-4"
+        >
           {t('goToLogin')}
         </Link>
       </div>
@@ -49,38 +61,41 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex max-w-sm flex-col gap-4">
-      <h1 className="text-2xl font-semibold">{t('resetPasswordTitle')}</h1>
-
-      <label className="flex flex-col gap-1">
-        {t('newPassword')}
-        <input
-          name="password"
-          type="password"
-          required
-          minLength={10}
-          autoComplete="new-password"
-          aria-describedby="password-hint"
-          className="rounded border px-3 py-2"
-        />
-        <span id="password-hint" className="text-sm text-gray-600">
-          {t('passwordHint')}
-        </span>
-      </label>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <h1 className="text-3xl font-semibold">{t('resetPasswordTitle')}</h1>
 
       {error && (
-        <p role="alert" className="text-red-700">
-          {error}
-        </p>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
-      <button
+      <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor="password">{t('newPassword')}</FieldLabel>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            required
+            minLength={10}
+            autoComplete="new-password"
+            aria-describedby="password-hint"
+          />
+          <FieldDescription id="password-hint">
+            {t('passwordHint')}
+          </FieldDescription>
+        </Field>
+      </FieldGroup>
+
+      <Button
         type="submit"
         disabled={pending}
-        className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
+        aria-busy={pending}
+        className="w-full"
       >
         {pending ? t('savingPassword') : t('savePassword')}
-      </button>
+      </Button>
     </form>
   )
 }

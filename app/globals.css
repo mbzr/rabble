@@ -91,6 +91,7 @@
   }
   html {
     @apply font-sans;
+    scroll-padding-top: 4rem; /* header height */
   }
   body {
     @apply bg-background text-foreground;
