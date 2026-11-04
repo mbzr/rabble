@@ -135,6 +135,12 @@ const eslintConfig = defineConfig([
     rules: { 'no-console': 'off' },
   },
 
+  // shadcn's generated components use function declarations; we don't rewrite them
+  {
+    files: ['components/ui/**'],
+    rules: { 'react/function-component-definition': 'off' },
+  },
+
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

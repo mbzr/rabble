@@ -1,15 +1,22 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
 import { notFound } from 'next/navigation'
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
+import { IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from 'next/font/google'
 import { routing } from '@/i18n/routing'
+import { DirectionProvider } from '@/components/ui/direction'
 import '../globals.css'
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const plexSans = IBM_Plex_Sans({
   subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-plex-sans',
+})
+
+const plexArabic = IBM_Plex_Sans_Arabic({
+  subsets: ['arabic'],
+  weight: ['400', '500', '600'],
+  variable: '--font-plex-arabic',
 })
 
 export function generateStaticParams() {
@@ -29,15 +36,18 @@ export async function generateMetadata({
 const LocaleLayout = async ({ children, params }: LayoutProps<'/[locale]'>) => {
   const { locale } = await params
   if (!hasLocale(routing.locales, locale)) notFound()
+  const dir = locale === 'ar' ? 'rtl' : 'ltr'
 
   return (
     <html
       lang={locale}
-      dir={locale === 'ar' ? 'rtl' : 'ltr'}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      dir={dir}
+      className={`${plexSans.variable} ${plexArabic.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <DirectionProvider direction={dir}>
+          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        </DirectionProvider>
       </body>
     </html>
   )
