@@ -6,7 +6,7 @@ import { ForbiddenError, UnauthenticatedError } from './errors'
 
 export type Role = 'learner' | 'instructor' | 'admin'
 
-export type CurrentUser = {
+export interface CurrentUser {
   id: string
   name: string
   email: string

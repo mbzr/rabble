@@ -3,7 +3,7 @@
 import { useRouter } from '@/i18n/navigation'
 import { authClient } from '@/lib/auth-client'
 
-export function SignOutButton({ label }: { label: string }) {
+export const SignOutButton = ({ label }: { label: string }) => {
   const router = useRouter()
 
   return (

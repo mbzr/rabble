@@ -26,10 +26,7 @@ export async function generateMetadata({
   return { title: t('title'), description: t('description') }
 }
 
-export default async function LocaleLayout({
-  children,
-  params,
-}: LayoutProps<'/[locale]'>) {
+const LocaleLayout = async ({ children, params }: LayoutProps<'/[locale]'>) => {
   const { locale } = await params
   if (!hasLocale(routing.locales, locale)) notFound()
 
@@ -45,3 +42,5 @@ export default async function LocaleLayout({
     </html>
   )
 }
+
+export default LocaleLayout
