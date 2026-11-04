@@ -4,14 +4,16 @@ import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Link, useRouter } from '@/i18n/navigation'
 import { authClient } from '@/lib/auth-client'
+import { authErrorKey } from '@/lib/auth-error'
 
 export const LoginForm = () => {
   const t = useTranslations('Auth')
+  const tErrors = useTranslations('Errors')
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
 
-  async function onSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault()
     setPending(true)
     setError(null)
@@ -24,7 +26,7 @@ export const LoginForm = () => {
 
     setPending(false)
     if (error) {
-      setError(error.message ?? 'Something went wrong')
+      setError(tErrors(authErrorKey(error.code)))
       return
     }
     router.push('/')
@@ -32,7 +34,7 @@ export const LoginForm = () => {
   }
 
   return (
-    <form onSubmit={onSubmit} className="flex max-w-sm flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex max-w-sm flex-col gap-4">
       <h1 className="text-2xl font-semibold">{t('signInTitle')}</h1>
 
       <label className="flex flex-col gap-1">

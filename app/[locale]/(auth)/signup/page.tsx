@@ -1,9 +1,11 @@
-import { SignUpForm } from './signup-form'
+import { SignupForm } from './signup-form'
 
-export default function SignUpPage() {
+const SignupPage = () => {
   return (
     <main className="p-8">
-      <SignUpForm />
+      <SignupForm />
     </main>
   )
 }
+
+export default SignupPage

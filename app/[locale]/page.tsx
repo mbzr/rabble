@@ -5,20 +5,7 @@ import { SignOutButton } from '@/components/sign-out-button'
 import { Link } from '@/i18n/navigation'
 import { getCurrentUser } from '@/lib/server/current-user'
 
-export default function HomePage() {
-  const t = useTranslations('HomePage')
-
-  return (
-    <main className="flex flex-col gap-4 p-8">
-      <h1 className="text-2xl font-semibold">{t('title')}</h1>
-      <Suspense fallback={null}>
-        <CurrentUserStatus />
-      </Suspense>
-    </main>
-  )
-}
-
-async function CurrentUserStatus() {
+const CurrentUserStatus = async () => {
   const [currentUser, t] = await Promise.all([
     getCurrentUser(),
     getTranslations('Auth'),
@@ -44,3 +31,18 @@ async function CurrentUserStatus() {
     </div>
   )
 }
+
+const HomePage = () => {
+  const t = useTranslations('Home')
+
+  return (
+    <main className="flex flex-col gap-4 p-8">
+      <h1 className="text-2xl font-semibold">{t('title')}</h1>
+      <Suspense fallback={null}>
+        <CurrentUserStatus />
+      </Suspense>
+    </main>
+  )
+}
+
+export default HomePage
