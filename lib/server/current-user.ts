@@ -32,14 +32,14 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   }
 })
 
-export async function requireUser(): Promise<CurrentUser> {
-  const viewer = await getCurrentUser()
-  if (!viewer) throw new UnauthenticatedError()
-  return viewer
+export const requireUser = async (): Promise<CurrentUser> => {
+  const user = await getCurrentUser()
+  if (!user) throw new UnauthenticatedError()
+  return user
 }
 
-export async function requireRole(...allowed: Role[]): Promise<CurrentUser> {
-  const viewer = await requireUser()
-  if (!allowed.includes(viewer.role)) throw new ForbiddenError()
-  return viewer
+export const requireRole = async (...allowed: Role[]): Promise<CurrentUser> => {
+  const user = await requireUser()
+  if (!allowed.includes(user.role)) throw new ForbiddenError()
+  return user
 }
