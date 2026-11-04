@@ -34,3 +34,28 @@ jobs:
       - run: npm run lint
       - run: npm run format:check
       - run: npm run build
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: rabble
+          POSTGRES_PASSWORD: rabble
+          POSTGRES_DB: rabble_test
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U rabble"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run test:run
