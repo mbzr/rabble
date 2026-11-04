@@ -59,6 +59,10 @@ export const LoginForm = () => {
         />
       </label>
 
+      <Link href="/forgot-password" className="underline">
+        {t('forgotPassword')}
+      </Link>
+
       {error && (
         <p role="alert" className="text-red-700">
           {error}
