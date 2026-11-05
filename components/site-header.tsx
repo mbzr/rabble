@@ -17,7 +17,9 @@ export const SiteHeader = async () => {
           <Link href="/courses">{t('courses')}</Link>
         </nav>
         <div className="ms-auto flex items-center gap-2">
-          <LanguageSwitcher />
+          <Suspense fallback={null}>
+            <LanguageSwitcher />
+          </Suspense>
           <Suspense fallback={null}>
             <UserMenu />
           </Suspense>

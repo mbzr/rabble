@@ -69,5 +69,39 @@
     "mainNav": "Main",
     "courses": "Courses",
     "switchLanguage": "English"
+  },
+  "Catalog": {
+    "title": "Courses",
+    "emptyTitle": "No courses yet",
+    "emptyBody": "New courses will appear here as soon as they're published."
+  },
+  "Course": {
+    "title": "Course",
+    "placeholder": "The course outline will appear here."
+  },
+  "Lesson": {
+    "title": "Lesson",
+    "lessons": "Lessons",
+    "placeholder": "The video player will appear here."
+  },
+  "MyLearning": {
+    "title": "My learning",
+    "emptyTitle": "You haven't enrolled in a course yet",
+    "emptyBody": "Courses you enrol in will show up here, with your progress.",
+    "browseCourses": "Browse courses"
+  },
+  "Studio": {
+    "title": "Studio",
+    "emptyTitle": "No courses yet",
+    "emptyBody": "Courses you create will appear here."
+  },
+  "Admin": {
+    "title": "Admin",
+    "emptyTitle": "Nothing here yet",
+    "emptyBody": "User and course management will appear here."
+  },
+  "Account": {
+    "title": "Account",
+    "placeholder": "Your profile, password and sessions will be managed here."
   }
 }
