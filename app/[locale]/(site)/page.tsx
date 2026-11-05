@@ -1,7 +1,6 @@
 import { useTranslations } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
-import { SignOutButton } from '@/components/sign-out-button'
 import { Link } from '@/i18n/navigation'
 import { getCurrentUser } from '@/lib/server/current-user'
 
@@ -27,7 +26,6 @@ const CurrentUserStatus = async () => {
   return (
     <div className="flex items-center gap-4">
       <p>{t('signedInAs', { name: currentUser.name })}</p>
-      <SignOutButton label={t('signOut')} />
     </div>
   )
 }

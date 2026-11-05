@@ -68,7 +68,13 @@
   "Header": {
     "mainNav": "Main",
     "courses": "Courses",
-    "switchLanguage": "English"
+    "switchLanguage": "English",
+    "openUserMenu": "Open account menu",
+    "myLearning": "My learning",
+    "studio": "Studio",
+    "admin": "Admin",
+    "account": "Account",
+    "signOut": "Sign out"
   },
   "Catalog": {
     "title": "Courses",
