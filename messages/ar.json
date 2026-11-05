@@ -79,7 +79,37 @@
   "Catalog": {
     "title": "Courses",
     "emptyTitle": "No courses yet",
-    "emptyBody": "New courses will appear here as soon as they're published."
+    "emptyBody": "New courses will appear here as soon as they're published.",
+    "categoryNav": "Categories",
+    "allCategories": "All",
+    "categories": {
+      "development": "Development",
+      "design": "Design",
+      "business": "Business",
+      "marketing": "Marketing",
+      "photo-video": "Photography and video",
+      "personal-development": "Personal development"
+    },
+    "language": "Language",
+    "allLanguages": "All languages",
+    "languages": { "en": "English", "ar": "Arabic" },
+    "level": "Level",
+    "allLevels": "All levels",
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "access": "Price",
+    "anyAccess": "Any price",
+    "accessTypes": { "free": "Free", "premium": "Premium" },
+    "applyFilters": "Apply",
+    "lessonCount": "{count, plural, one {# lesson} other {# lessons}}",
+    "minutes": "{count} min",
+    "byInstructor": "By <bdi>{name}</bdi>",
+    "noMatchesTitle": "No courses match these filters",
+    "noMatchesBody": "Try a different category, language, level or price.",
+    "clearFilters": "Clear filters"
   },
   "Course": {
     "title": "Course",
