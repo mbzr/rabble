@@ -69,6 +69,14 @@ const courses: CourseSummary[] = [
     instructorName: 'Instructor name',
   },
 ]
+const RECENT_COURSES_LIMIT = 6
+
+export const listRecentCourses = async (): Promise<CourseSummary[]> => {
+  'use cache'
+  cacheTag('catalog')
+
+  return [...courses].reverse().slice(0, RECENT_COURSES_LIMIT)
+}
 
 export const listPublishedCourses = async (
   filters: CatalogFilters,

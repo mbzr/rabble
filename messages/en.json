@@ -3,7 +3,14 @@
     "title": "Rabble",
     "description": "Short video courses for frontend developers."
   },
-  "Home": { "title": "Welcome to Rabble" },
+  "Home": {
+    "title": "Short video courses, in English and Arabic",
+    "intro": "Watch at your own pace, pick up where you left off, and keep track of what you've finished.",
+    "browseCourses": "Browse courses",
+    "byCategory": "Browse by category",
+    "recentlyAdded": "Recently added",
+    "seeAll": "See all courses"
+  },
   "Auth": {
     "signUpTitle": "Create your account",
     "name": "Name",
@@ -12,7 +19,6 @@
     "passwordHint": "At least 10 characters",
     "signUp": "Create account",
     "signingUp": "Creating account…",
-    "signedInAs": "Signed in as {name}",
     "signOut": "Sign out",
     "signUpLink": "Create an account",
     "signInTitle": "Sign in",

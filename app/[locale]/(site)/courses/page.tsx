@@ -19,7 +19,7 @@ import {
 } from '@/lib/server/courses'
 import { CatalogFiltersForm } from './catalog-filters-form'
 import { CategoryChips } from './category-chips'
-import { CourseCard } from './course-card'
+import { CourseCard } from '@/components/course/course-card'
 
 type CatalogPageProps = PageProps<'/[locale]/courses'>
 
