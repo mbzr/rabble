@@ -74,7 +74,8 @@
     "studio": "Studio",
     "admin": "Admin",
     "account": "Account",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "pricing": "Pricing"
   },
   "Catalog": {
     "title": "Courses",
@@ -139,5 +140,9 @@
   "Account": {
     "title": "Account",
     "placeholder": "Your profile, password and sessions will be managed here."
+  },
+  "Pricing": {
+    "title": "Pricing",
+    "placeholder": "The pricing page will appear here."
   }
 }

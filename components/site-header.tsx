@@ -13,8 +13,12 @@ export const SiteHeader = async () => {
         <Link href="/" className="text-xl font-semibold">
           Rabble
         </Link>
-        <nav aria-label={t('mainNav')} className="text-sm font-medium">
+        <nav
+          aria-label={t('mainNav')}
+          className="flex items-center gap-4 text-sm font-medium"
+        >
           <Link href="/courses">{t('courses')}</Link>
+          <Link href="/pricing">{t('pricing')}</Link>
         </nav>
         <div className="ms-auto flex items-center gap-2">
           <Suspense fallback={null}>
