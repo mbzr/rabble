@@ -16,9 +16,7 @@ import {
   COURSE_LEVELS,
   COURSE_STATUSES,
 } from '@/lib/schemas/course'
-
-const sqlList = (values: readonly string[]) =>
-  sql.raw(values.map((value) => `'${value}'`).join(', '))
+import { sqlList } from '@/db/sql-list'
 
 export const courses = pgTable(
   'courses',
