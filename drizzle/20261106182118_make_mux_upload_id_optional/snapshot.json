@@ -1,0 +1,29 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "cce90ef0-0f29-4911-905f-2f93f789691b",
+  "prevIds": ["8a1cc242-7a03-42c6-9ec9-82c973431f79"],
+  "footprints": [
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "videos", "mux_upload_id"],
+      "writes": ["s|colprop|public.videos.mux_upload_id.notNull"],
+      "reads": [
+        "n|tbl|public.videos",
+        "n|sch|public",
+        "n|col|public.videos.mux_upload_id"
+      ],
+      "sqlHash": "5092153366b17111"
+    }
+  ],
+  "deltas": [
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"videos\",\"mux_upload_id\"]",
+      "set": {
+        "notNull": false
+      }
+    }
+  ]
+}

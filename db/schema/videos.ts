@@ -9,7 +9,7 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core'
-import { lessons } from './lesson'
+import { lessons } from './lessons'
 import { sqlList } from '../sql-list'
 
 export const VIDEO_STATUSES = [
@@ -35,7 +35,7 @@ export const videos = pgTable(
       .references(() => lessons.id, {
         onDelete: 'cascade', // automatically delete all videos when the lesson is deleted
       }),
-    muxUploadId: text('mux_upload_id').notNull().unique(),
+    muxUploadId: text('mux_upload_id').unique(),
     muxAssetId: text('mux_asset_id'),
     muxPlaybackId: text('mux_playback_id'),
     status: text('status', { enum: VIDEO_STATUSES })

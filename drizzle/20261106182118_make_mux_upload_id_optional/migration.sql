@@ -1,0 +1,1 @@
+ALTER TABLE "videos" ALTER COLUMN "mux_upload_id" DROP NOT NULL;
