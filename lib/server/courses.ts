@@ -9,6 +9,12 @@ import {
   type CourseLanguage,
   type CourseLevel,
 } from '@/lib/schemas/course'
+import { and, count, desc, eq, not, type SQL, sum } from 'drizzle-orm'
+import { courses } from '@/db/schema/courses'
+import { lessons } from '@/db/schema/lessons'
+import { db } from '@/db'
+import { videos } from '@/db/schema/videos'
+import { user } from '@/db/schema/auth'
 
 export interface CourseSummary {
   id: string
@@ -24,58 +30,69 @@ export interface CourseSummary {
   instructorName: string
 }
 
-// TODO: replace by a real query
-const courses: CourseSummary[] = [
-  {
-    id: '00000000-0000-4000-8000-000000000001',
-    slug: 'ui-design-fundamentals',
-    title: 'UI design fundamentals',
-    description:
-      'Layout, spacing, type and colour: the decisions behind interfaces that feel clear and calm.',
-    category: 'design',
-    language: 'en',
-    level: 'beginner',
-    access: 'free',
-    lessonCount: 8,
-    durationSeconds: 3000,
-    instructorName: 'Instructor name',
-  },
-  {
-    id: '00000000-0000-4000-8000-000000000002',
-    slug: 'designing-interfaces-in-figma',
-    title: 'Designing interfaces in Figma',
-    description:
-      'Auto layout, components and variants, so your designs stay consistent as they grow.',
-    category: 'design',
-    language: 'en',
-    level: 'intermediate',
-    access: 'premium',
-    lessonCount: 10,
-    durationSeconds: 4500,
-    instructorName: 'Instructor name',
-  },
-  {
-    id: '00000000-0000-4000-8000-000000000003',
-    slug: 'design-systems-from-scratch',
-    title: 'أنظمة التصميم من الصفر',
-    description:
-      'ابنِ نظام تصميم صغيرًا بالألوان والخطوط والمكوّنات، وتعلّم كيف يحافظ على اتساق واجهاتك.',
-    category: 'design',
-    language: 'ar',
-    level: 'intermediate',
-    access: 'premium',
-    lessonCount: 9,
-    durationSeconds: 3900,
-    instructorName: 'Instructor name',
-  },
-]
 const RECENT_COURSES_LIMIT = 6
+
+const isInCatalog = and(eq(courses.status, 'published'), not(courses.isSandbox))
+
+interface CourseSummaryRow extends Omit<
+  CourseSummary,
+  'lessonCount' | 'durationSeconds'
+> {
+  lessonCount: number | null
+  durationSeconds: string | null
+}
+
+const lessonTotals = db
+  .select({
+    courseId: lessons.courseId,
+    lessonCount: count(lessons.id).as('lesson_count'),
+    durationSeconds: sum(videos.durationSeconds).as('duration_seconds'),
+  })
+  .from(lessons)
+  .leftJoin(
+    videos,
+    and(eq(videos.lessonId, lessons.id), eq(videos.status, 'ready')),
+  )
+  .where(eq(lessons.status, 'published'))
+  .groupBy(lessons.courseId)
+  .as('lesson_totals')
+
+const selectCourseSummaries = (where: SQL | undefined) => {
+  return db
+    .select({
+      id: courses.id,
+      slug: courses.slug,
+      title: courses.title,
+      description: courses.description,
+      category: courses.category,
+      language: courses.language,
+      level: courses.level,
+      access: courses.access,
+      instructorName: user.name,
+      lessonCount: lessonTotals.lessonCount,
+      durationSeconds: lessonTotals.durationSeconds,
+    })
+    .from(courses)
+    .innerJoin(user, eq(user.id, courses.ownerId))
+    .leftJoin(lessonTotals, eq(lessonTotals.courseId, courses.id))
+    .where(where)
+    .orderBy(desc(courses.publishedAt))
+}
+
+const toCourseSummary = (row: CourseSummaryRow): CourseSummary => ({
+  ...row,
+  lessonCount: Number(row.lessonCount ?? 0),
+  durationSeconds: Number(row.durationSeconds ?? 0),
+})
 
 export const listRecentCourses = async (): Promise<CourseSummary[]> => {
   'use cache'
   cacheTag('catalog')
 
-  return [...courses].reverse().slice(0, RECENT_COURSES_LIMIT)
+  const rows =
+    await selectCourseSummaries(isInCatalog).limit(RECENT_COURSES_LIMIT)
+
+  return rows.map(toCourseSummary)
 }
 
 export const listPublishedCourses = async (
@@ -84,20 +101,28 @@ export const listPublishedCourses = async (
   'use cache'
   cacheTag('catalog')
 
-  return courses.filter(
-    (course) =>
-      (!filters.category || course.category === filters.category) &&
-      (!filters.language || course.language === filters.language) &&
-      (!filters.level || course.level === filters.level) &&
-      (!filters.access || course.access === filters.access),
+  const rows = await selectCourseSummaries(
+    and(
+      isInCatalog,
+      filters.category ? eq(courses.category, filters.category) : undefined,
+      filters.language ? eq(courses.language, filters.language) : undefined,
+      filters.level ? eq(courses.level, filters.level) : undefined,
+      filters.access ? eq(courses.access, filters.access) : undefined,
+    ),
   )
+
+  return rows.map(toCourseSummary)
 }
 
 export const listCatalogCategories = async (): Promise<CourseCategory[]> => {
   'use cache'
   cacheTag('catalog')
 
-  return COURSE_CATEGORIES.filter((category) =>
-    courses.some((course) => course.category === category),
-  )
+  const rows = await db
+    .selectDistinct({ category: courses.category })
+    .from(courses)
+    .where(isInCatalog)
+  const categories = new Set(rows.map((row) => row.category))
+
+  return COURSE_CATEGORIES.filter((category) => categories.has(category))
 }
