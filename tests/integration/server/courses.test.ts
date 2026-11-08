@@ -1,4 +1,4 @@
-import { CatalogFilters } from '@/lib/schemas/course'
+import { type CatalogFilters } from '@/lib/schemas/course'
 import { listPublishedCourses, listRecentCourses } from '@/lib/server/courses'
 import { createCourse, createLesson, createUser } from '@/tests/factories'
 import { beforeAll, describe, expect, test } from 'vitest'

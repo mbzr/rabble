@@ -12,7 +12,7 @@ export const createUser = async (
     .insert(user)
     .values({
       name: 'Test user',
-      email: `${randomUUID()}@test.com`,
+      email: `${randomUUID()}@test.invalid`,
       emailVerified: true,
       role: 'learner',
       ...values,

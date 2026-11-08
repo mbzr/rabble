@@ -128,7 +128,7 @@ const seed = async () => {
           slug: lesson.slug,
           title: lesson.title,
           position,
-          isFreePreview: true, // first lesson can be watched for free
+          isFreePreview: position === 0, // first lesson can be watched for free
           status: 'published' as const,
         })),
     )

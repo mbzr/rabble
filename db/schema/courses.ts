@@ -22,9 +22,11 @@ export const courses = pgTable(
   'courses',
   {
     id: uuid('id').primaryKey().defaultRandom(),
-    ownerId: uuid('owner_id').references(() => user.id, {
-      onDelete: 'restrict',
-    }),
+    ownerId: uuid('owner_id')
+      .notNull()
+      .references(() => user.id, {
+        onDelete: 'restrict',
+      }),
     slug: text('slug').unique().notNull(),
     title: text('title').notNull(),
     description: text('description').notNull().default(''),
@@ -68,7 +70,7 @@ export const courses = pgTable(
       sql`${table.status} in (${sqlList(COURSE_STATUSES)})`,
     ),
     index('courses_catalog_idx')
-      .on(table.publishedAt.desc())
+      .on(table.publishedAt.desc().nullsFirst())
       .where(sql`${table.status} = 'published' and not ${table.isSandbox}`),
   ],
 )

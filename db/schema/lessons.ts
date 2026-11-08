@@ -23,10 +23,10 @@ export const lessons = pgTable(
       .references(() => courses.id, {
         onDelete: 'cascade', // automatically delete all lessons when the course is deleted
       }),
-    slug: text('slug').notNull().unique(),
+    slug: text('slug').notNull(),
     title: text('title').notNull(),
     description: text('description').notNull().default(''),
-    position: integer('position').notNull().default(0),
+    position: integer('position').notNull(),
     isFreePreview: boolean('is_free_preview').notNull().default(false),
     status: text('status', { enum: LESSON_STATUSES })
       .notNull()

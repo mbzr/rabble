@@ -42,8 +42,8 @@ export const videos = pgTable(
       .notNull()
       .default('waiting_for_upload'),
     durationSeconds: integer('duration_seconds'),
-    aspectRatio: text('aspect_ration'),
-    captionsStatus: text('caption_status', { enum: CAPTION_STATUSES })
+    aspectRatio: text('aspect_ratio'),
+    captionsStatus: text('captions_status', { enum: CAPTION_STATUSES })
       .notNull()
       .default('none'),
     captionTrackId: text('caption_track_id'),

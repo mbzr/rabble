@@ -1,0 +1,136 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "88263579-b2b4-49b1-9e54-b51e0aae49d3",
+  "prevIds": ["cce90ef0-0f29-4911-905f-2f93f789691b"],
+  "footprints": [
+    {
+      "statementType": "rename_column",
+      "statementTarget": ["column", "public", "videos", "aspect_ration"],
+      "writes": [
+        "s|col|public.videos.aspect_ration",
+        "n|col|public.videos.aspect_ration",
+        "s|col|public.videos.aspect_ratio",
+        "n|col|public.videos.aspect_ratio"
+      ],
+      "reads": ["n|tbl|public.videos", "n|sch|public"]
+    },
+    {
+      "statementType": "rename_column",
+      "statementTarget": ["column", "public", "videos", "caption_status"],
+      "writes": [
+        "s|col|public.videos.caption_status",
+        "n|col|public.videos.caption_status",
+        "s|col|public.videos.captions_status",
+        "n|col|public.videos.captions_status"
+      ],
+      "reads": ["n|tbl|public.videos", "n|sch|public"]
+    },
+    {
+      "statementType": "drop_unique",
+      "statementTarget": ["table", "public", "lessons"],
+      "writes": [
+        "s|uq|public.lessons.lessons_slug_key",
+        "n|uq|public.lessons.lessons_slug_key",
+        "e|uq|public.lessons.lessons_slug_key",
+        "n|con|public.lessons.lessons_slug_key",
+        "n|rel|public.lessons_slug_key"
+      ],
+      "reads": [
+        "n|tbl|public.lessons",
+        "n|sch|public",
+        "e|col|public.lessons.slug"
+      ],
+      "sharedWrites": ["e|uniqueness|public.lessons.slug"]
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "courses", "owner_id"],
+      "writes": ["s|colprop|public.courses.owner_id.notNull"],
+      "reads": [
+        "n|tbl|public.courses",
+        "n|sch|public",
+        "n|col|public.courses.owner_id"
+      ],
+      "sqlHash": "5ca81943baa2484d"
+    },
+    {
+      "statementType": "recreate_index",
+      "statementTarget": ["index", "public", "courses", "courses_catalog_idx"],
+      "writes": [
+        "s|idx|public.courses_catalog_idx",
+        "n|idx|public.courses_catalog_idx",
+        "e|idx|public.courses_catalog_idx",
+        "n|rel|public.courses_catalog_idx"
+      ],
+      "reads": [
+        "n|tbl|public.courses",
+        "n|sch|public",
+        "n|col|public.courses.published_at"
+      ],
+      "sharedWrites": [],
+      "sqlHash": "167febf7905e55d4"
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "videos"],
+      "writes": ["s|ck|public.videos.videos_captions_status_check"],
+      "reads": [
+        "n|tbl|public.videos",
+        "n|sch|public",
+        "n|col|public.videos.captions_status"
+      ],
+      "sqlHash": "58ea8bcb3c17b7dc"
+    }
+  ],
+  "deltas": [
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"videos\",\"aspect_ration\"]",
+      "set": {
+        "name": "aspect_ratio"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"videos\",\"caption_status\"]",
+      "set": {
+        "name": "captions_status"
+      }
+    },
+    {
+      "op": "drop",
+      "key": "uniques\u0000[\"public\",\"lessons\",\"lessons_slug_key\"]"
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"courses\",\"owner_id\"]",
+      "set": {
+        "notNull": true
+      }
+    },
+    {
+      "op": "alter",
+      "key": "indexes\u0000[\"public\",\"courses_catalog_idx\"]",
+      "set": {
+        "columns": [
+          {
+            "value": "published_at",
+            "isExpression": false,
+            "asc": false,
+            "nullsFirst": true,
+            "opclass": null
+          }
+        ]
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"videos\",\"videos_captions_status_check\"]",
+      "set": {
+        "value": "\"captions_status\" in ('none', 'generating', 'ready', 'errored')"
+      }
+    }
+  ]
+}
