@@ -1,5 +1,5 @@
 import { drizzleAdapter } from '@better-auth/drizzle-adapter/relations-v2'
-import { betterAuth } from 'better-auth'
+import { betterAuth, type BetterAuthOptions } from 'better-auth'
 import { nextCookies } from 'better-auth/next-js'
 import { admin, haveIBeenPwned } from 'better-auth/plugins'
 import { db } from '@/db'
@@ -36,7 +36,7 @@ const sendAuthEmail = (
   )
 }
 
-export const auth = betterAuth({
+export const authOptions = {
   baseURL: env.BETTER_AUTH_URL,
   secret: env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, { provider: 'pg', schema: authSchema }),
@@ -51,7 +51,7 @@ export const auth = betterAuth({
       sendAuthEmail(user, 'resetPassword', url),
   },
   emailVerification: {
-    sendOnSignup: true,
+    sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) =>
       sendAuthEmail(user, 'verifyEmail', url),
@@ -83,4 +83,6 @@ export const auth = betterAuth({
     haveIBeenPwned(),
     nextCookies(), // must stay last
   ],
-})
+} satisfies BetterAuthOptions
+
+export const auth = betterAuth(authOptions)
