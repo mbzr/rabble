@@ -6,12 +6,31 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { getCourseBySlug } from '@/lib/server/courses'
+import { getCourseBySlug, listPublishedCourses } from '@/lib/server/courses'
 import { BookOpenIcon } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 
 type CoursePageProps = PageProps<'/[locale]/courses/[slug]'>
+
+export const generateStaticParams = async () => {
+  const catalogCourses = await listPublishedCourses({})
+
+  return catalogCourses.length > 0
+    ? catalogCourses.map((course) => ({ slug: course.slug }))
+    : [{ slug: 'placeholder' }]
+}
+
+export const generateMetadata = async ({ params }: CoursePageProps) => {
+  const { slug } = await params
+  const course = await getCourseBySlug(slug)
+  if (!course) return {}
+
+  return {
+    title: course.title,
+    description: course.description,
+  }
+}
 
 const CoursePage = async ({ params }: CoursePageProps) => {
   const { slug } = await params

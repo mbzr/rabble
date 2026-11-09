@@ -21,7 +21,7 @@ export const enrolments = pgTable(
       .references(() => user.id, { onDelete: 'cascade' }),
     courseId: uuid('course_id')
       .notNull()
-      .references(() => courses.id, { onDelete: 'cascade' }),
+      .references(() => courses.id, { onDelete: 'restrict' }),
     source: text('source', { enum: ENROLMENT_SOURCES })
       .notNull()
       .default('self'),

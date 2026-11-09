@@ -1,0 +1,1 @@
+ALTER TABLE "enrolments" DROP CONSTRAINT "enrolments_course_id_courses_id_fkey", ADD CONSTRAINT "enrolments_course_id_courses_id_fkey" FOREIGN KEY ("course_id") REFERENCES "courses"("id") ON DELETE RESTRICT;

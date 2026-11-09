@@ -1,0 +1,38 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "d82c6a00-f566-43b5-9956-c0e987b6dd44",
+  "prevIds": ["e8917342-99f4-4614-88b0-4a2a18da6b39"],
+  "footprints": [
+    {
+      "statementType": "recreate_fk",
+      "statementTarget": ["table", "public", "enrolments"],
+      "writes": [
+        "s|fk|public.enrolments.enrolments_course_id_courses_id_fkey",
+        "n|fk|public.enrolments.enrolments_course_id_courses_id_fkey",
+        "e|fk|public.enrolments.enrolments_course_id_courses_id_fkey",
+        "n|con|public.enrolments.enrolments_course_id_courses_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.enrolments",
+        "n|sch|public",
+        "n|tbl|public.courses",
+        "n|sch|public",
+        "n|col|public.enrolments.course_id",
+        "n|col|public.courses.id",
+        "e|uniqueness|public.courses.id"
+      ],
+      "sqlHash": "92609919ebec740c"
+    }
+  ],
+  "deltas": [
+    {
+      "op": "alter",
+      "key": "fks\u0000[\"public\",\"enrolments\",\"enrolments_course_id_courses_id_fkey\"]",
+      "set": {
+        "onDelete": "RESTRICT"
+      }
+    }
+  ]
+}
