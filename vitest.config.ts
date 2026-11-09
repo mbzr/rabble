@@ -14,6 +14,9 @@ const config = defineConfig({
       'next/cache': fileURLToPath(
         new URL('./tests/stubs/next-cache.ts', import.meta.url),
       ),
+      'next/headers': fileURLToPath(
+        new URL('./tests/stubs/next-headers.ts', import.meta.url),
+      ),
     },
   },
   test: {

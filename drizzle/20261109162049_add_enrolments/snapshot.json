@@ -1,0 +1,206 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "e8917342-99f4-4614-88b0-4a2a18da6b39",
+  "prevIds": ["88263579-b2b4-49b1-9e54-b51e0aae49d3"],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "enrolments"],
+      "writes": [
+        "s|tbl|public.enrolments",
+        "n|tbl|public.enrolments",
+        "e|tbl|public.enrolments",
+        "n|rel|public.enrolments",
+        "n|type|public.enrolments",
+        "n|rel|public.enrolments_pkey"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "lessons", "position"],
+      "writes": ["s|colprop|public.lessons.position.default"],
+      "reads": [
+        "n|tbl|public.lessons",
+        "n|sch|public",
+        "n|col|public.lessons.position"
+      ],
+      "sqlHash": "db47246baeb7446f"
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "enrolments"],
+      "writes": [
+        "s|fk|public.enrolments.enrolments_user_id_user_id_fkey",
+        "n|fk|public.enrolments.enrolments_user_id_user_id_fkey",
+        "e|fk|public.enrolments.enrolments_user_id_user_id_fkey",
+        "n|con|public.enrolments.enrolments_user_id_user_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.enrolments",
+        "n|sch|public",
+        "n|tbl|public.user",
+        "n|sch|public",
+        "n|col|public.enrolments.user_id",
+        "n|col|public.user.id",
+        "e|uniqueness|public.user.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "enrolments"],
+      "writes": [
+        "s|fk|public.enrolments.enrolments_course_id_courses_id_fkey",
+        "n|fk|public.enrolments.enrolments_course_id_courses_id_fkey",
+        "e|fk|public.enrolments.enrolments_course_id_courses_id_fkey",
+        "n|con|public.enrolments.enrolments_course_id_courses_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.enrolments",
+        "n|sch|public",
+        "n|tbl|public.courses",
+        "n|sch|public",
+        "n|col|public.enrolments.course_id",
+        "n|col|public.courses.id",
+        "e|uniqueness|public.courses.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "enrolments",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "enrolments",
+        "name": "user_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "enrolments",
+        "name": "course_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "enrolments",
+        "name": "source",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'self'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "enrolments",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "enrolments",
+        "name": "enrolments_user_id_user_id_fkey",
+        "nameExplicit": false,
+        "columns": ["user_id"],
+        "schemaTo": "public",
+        "tableTo": "user",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "enrolments",
+        "name": "enrolments_course_id_courses_id_fkey",
+        "nameExplicit": false,
+        "columns": ["course_id"],
+        "schemaTo": "public",
+        "tableTo": "courses",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "enrolments",
+        "name": "enrolments_pkey",
+        "columns": ["user_id", "course_id"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "enrolments",
+        "name": "enrolments_source_check",
+        "value": "\"source\" in ('self', 'seed', 'demo')",
+        "entityType": "checks"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"lessons\",\"position\"]",
+      "set": {
+        "default": null
+      }
+    }
+  ]
+}
