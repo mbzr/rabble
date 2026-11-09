@@ -119,8 +119,10 @@
     "clearFilters": "Clear filters"
   },
   "Course": {
-    "title": "Course",
-    "placeholder": "The course outline will appear here."
+    "outline": "Course outline",
+    "freePreview": "Free preview",
+    "noLessonsTitle": "No lessons yet",
+    "noLessonsBody": "Lessons will appear here once they're published."
   },
   "Lesson": {
     "title": "Lesson",

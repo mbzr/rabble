@@ -1,5 +1,9 @@
 import { type CatalogFilters } from '@/lib/schemas/course'
-import { listPublishedCourses, listRecentCourses } from '@/lib/server/courses'
+import {
+  getCourseBySlug,
+  listPublishedCourses,
+  listRecentCourses,
+} from '@/lib/server/courses'
 import { createCourse, createLesson, createUser } from '@/tests/factories'
 import { beforeAll, describe, expect, test } from 'vitest'
 
@@ -145,5 +149,30 @@ describe('catalog queries', () => {
       'figma-101',
       'empty-course',
     ])
+  })
+
+  test('returns a course with its published lessons and ready videos', async () => {
+    const course = await getCourseBySlug('figma-101')
+    expect(
+      course?.lessons.map((lesson) => [
+        lesson.position,
+        lesson.durationSeconds,
+      ]),
+    ).toEqual([
+      [0, 120],
+      [1, 180],
+    ])
+    expect(course).toMatchObject({ lessonCount: 2, durationSeconds: 300 })
+  })
+
+  test('never returns draft lessons', async () => {
+    const course = await getCourseBySlug('figma-101')
+    expect(course?.lessons.some((lesson) => lesson.position === 3)).toBe(false)
+  })
+
+  test('returns null for draft, archived, and sandbox courses', async () => {
+    expect(await getCourseBySlug('draft-course')).toBeNull()
+    expect(await getCourseBySlug('archived-course')).toBeNull()
+    expect(await getCourseBySlug('sandbox-course')).toBeNull()
   })
 })

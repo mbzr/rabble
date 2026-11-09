@@ -9,7 +9,7 @@ import {
   type CourseLanguage,
   type CourseLevel,
 } from '@/lib/schemas/course'
-import { and, count, desc, eq, not, type SQL, sum } from 'drizzle-orm'
+import { and, asc, count, desc, eq, not, type SQL, sum } from 'drizzle-orm'
 import { courses } from '@/db/schema/courses'
 import { lessons } from '@/db/schema/lessons'
 import { db } from '@/db'
@@ -125,4 +125,74 @@ export const listCatalogCategories = async (): Promise<CourseCategory[]> => {
   const categories = new Set(rows.map((row) => row.category))
 
   return COURSE_CATEGORIES.filter((category) => categories.has(category))
+}
+
+export interface LessonSummary {
+  id: string
+  slug: string
+  title: string
+  position: number
+  isFreePreview: boolean
+  // Null while the video is still processing
+  durationSeconds: number | null
+}
+
+export interface CourseDetail extends CourseSummary {
+  lessons: LessonSummary[]
+}
+
+export const getCourseBySlug = async (
+  slug: string,
+): Promise<CourseDetail | null> => {
+  'use cache'
+  cacheTag('catalog')
+
+  const [course] = await db
+    .select({
+      id: courses.id,
+      slug: courses.slug,
+      title: courses.title,
+      description: courses.description,
+      category: courses.category,
+      language: courses.language,
+      level: courses.level,
+      access: courses.access,
+      instructorName: user.name,
+    })
+    .from(courses)
+    .innerJoin(user, eq(user.id, courses.ownerId))
+    .where(and(eq(courses.slug, slug), isInCatalog))
+
+  if (!course) return null
+  cacheTag(`course:${course.id}`)
+
+  const courseLessons = await db
+    .select({
+      id: lessons.id,
+      slug: lessons.slug,
+      title: lessons.title,
+      description: lessons.description,
+      position: lessons.position,
+      isFreePreview: lessons.isFreePreview,
+      durationSeconds: videos.durationSeconds,
+    })
+    .from(lessons)
+    .innerJoin(
+      videos,
+      and(eq(videos.lessonId, lessons.id), eq(videos.status, 'ready')),
+    )
+    .where(
+      and(eq(lessons.courseId, course.id), eq(lessons.status, 'published')),
+    )
+    .orderBy(asc(lessons.position))
+
+  return {
+    ...course,
+    lessons: courseLessons,
+    lessonCount: courseLessons.length,
+    durationSeconds: courseLessons.reduce(
+      (total, lesson) => total + (lesson.durationSeconds ?? 0),
+      0,
+    ),
+  }
 }
