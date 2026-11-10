@@ -122,7 +122,18 @@
     "outline": "Course outline",
     "freePreview": "Free preview",
     "noLessonsTitle": "No lessons yet",
-    "noLessonsBody": "Lessons will appear here once they're published."
+    "noLessonsBody": "Lessons will appear here once they're published.",
+    "signInToStart": "Sign in to start",
+    "enrol": "Enrol",
+    "enrolling": "Enrolling…",
+    "continue": "Continue",
+    "subscribeToUnlock": "Subscribe to unlock"
+  },
+  "ActionErrors": {
+    "invalid_input": "Something went wrong with that request. Refresh the page and try again.",
+    "unauthenticated": "Your session has ended. Sign in again to continue.",
+    "forbidden": "You can't do that here.",
+    "not_found": "We couldn't find that. It may have been removed."
   },
   "Lesson": {
     "title": "Lesson",
