@@ -8,5 +8,5 @@ interface EnrollableCourse {
   isSandbox: boolean
 }
 
-export const canEnrollInCourse = (course: EnrollableCourse) =>
+export const canEnrolInCourse = (course: EnrollableCourse) =>
   course.status === 'published' && !course.isSandbox && course.access === 'free'

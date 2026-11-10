@@ -4,10 +4,10 @@ import { db } from '@/db'
 import { courses } from '@/db/schema/courses'
 import { and, eq } from 'drizzle-orm'
 import { ForbiddenError, NotFoundError } from './errors'
-import { canEnrollInCourse } from './policies'
+import { canEnrolInCourse } from './policies'
 import { enrolments } from '@/db/schema/enrolments'
 
-export const enrollInCourse = async (courseId: string) => {
+export const enrolInCourse = async (courseId: string) => {
   const user = await requireUser()
 
   const [course] = await db
@@ -20,8 +20,8 @@ export const enrollInCourse = async (courseId: string) => {
     .where(eq(courses.id, courseId))
 
   if (!course) throw new NotFoundError('Course not found')
-  if (!canEnrollInCourse(course))
-    throw new ForbiddenError('You cannot enroll in this course')
+  if (!canEnrolInCourse(course))
+    throw new ForbiddenError('You cannot enrol in this course')
 
   await db
     .insert(enrolments)

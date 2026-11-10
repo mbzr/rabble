@@ -1,7 +1,4 @@
-import {
-  enrollInCourse,
-  getMyEnrolmentForCourse,
-} from '@/lib/server/enrolments'
+import { enrolInCourse, getMyEnrolmentForCourse } from '@/lib/server/enrolments'
 import {
   ForbiddenError,
   NotFoundError,
@@ -34,43 +31,43 @@ describe('enrolments', () => {
 
   test('a logged in learner can enrol in a free course', async () => {
     await signInAs(learner)
-    await enrollInCourse(freeCourse.id)
+    await enrolInCourse(freeCourse.id)
 
     expect(await getMyEnrolmentForCourse(freeCourse.id)).toMatchObject({
       courseId: freeCourse.id,
     })
   })
 
-  test('enolling twice changes nothing', async () => {
+  test('enrolling twice changes nothing', async () => {
     await signInAs(learner)
-    await enrollInCourse(freeCourse.id)
+    await enrolInCourse(freeCourse.id)
     const firstEnrolment = await getMyEnrolmentForCourse(freeCourse.id)
-    await enrollInCourse(freeCourse.id)
+    await enrolInCourse(freeCourse.id)
 
     expect(await getMyEnrolmentForCourse(freeCourse.id)).toEqual(firstEnrolment)
   })
 
   test('refuses visitors', async () => {
-    await expect(enrollInCourse(freeCourse.id)).rejects.toThrow(
+    await expect(enrolInCourse(freeCourse.id)).rejects.toThrow(
       UnauthenticatedError,
     )
   })
 
   test('refuses Premium course enrolments until subscription is active', async () => {
     await signInAs(learner)
-    await expect(enrollInCourse(premiumCourse.id)).rejects.toThrow(
+    await expect(enrolInCourse(premiumCourse.id)).rejects.toThrow(
       ForbiddenError,
     )
   })
 
   test('refuses Draft course enrolments', async () => {
     await signInAs(learner)
-    await expect(enrollInCourse(draftCourse.id)).rejects.toThrow(ForbiddenError)
+    await expect(enrolInCourse(draftCourse.id)).rejects.toThrow(ForbiddenError)
   })
 
   test('refuses courses that do no exist', async () => {
     await signInAs(learner)
-    await expect(enrollInCourse(randomUUID())).rejects.toThrow(NotFoundError)
+    await expect(enrolInCourse(randomUUID())).rejects.toThrow(NotFoundError)
   })
 
   test('returns null for a course that the learner is not enrolled in', async () => {
