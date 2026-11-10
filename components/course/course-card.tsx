@@ -9,7 +9,7 @@ interface CourseCardProps {
 
 export const CourseCard = ({ course }: CourseCardProps) => {
   const t = useTranslations('Catalog')
-  const minutes = Math.round(course.durationSeconds / 60)
+  const minutes = Math.ceil(course.durationSeconds / 60)
 
   return (
     <article className="bg-card relative flex h-full flex-col overflow-hidden rounded-xl border">
