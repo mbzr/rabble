@@ -10,8 +10,8 @@ const pool =
 
 if (env.NODE_ENV !== 'production') globalForDb.pool = pool
 
-// close the pool when the function is done
-// does nothing outside of Vercel Functions
+// closes idle connections before Vercel suspends the function,
+// does nothing outside Vercel Functions
 attachDatabasePool(pool)
 
 export const db = drizzle({ client: pool })
