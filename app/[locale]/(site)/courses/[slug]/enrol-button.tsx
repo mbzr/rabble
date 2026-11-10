@@ -9,13 +9,15 @@ import { useRouter } from '@/i18n/navigation'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 
+interface EnrolButtonProps {
+  courseId: string
+  firstLessonHref: string
+}
+
 export const EnrolButton = ({
   courseId,
   firstLessonHref,
-}: {
-  courseId: string
-  firstLessonHref: string
-}) => {
+}: EnrolButtonProps) => {
   const router = useRouter()
   const tErrors = useTranslations('ActionErrors')
   const t = useTranslations('Course')

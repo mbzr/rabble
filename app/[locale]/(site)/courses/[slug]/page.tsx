@@ -14,7 +14,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { Link } from '@/i18n/navigation'
 import {
-  CourseDetail,
+  type CourseDetail,
   getCourseBySlug,
   listPublishedCourses,
 } from '@/lib/server/courses'
@@ -104,7 +104,6 @@ const CoursePage = async ({ params }: CoursePageProps) => {
     <div className="flex flex-col gap-12">
       <header className="flex max-w-prose flex-col gap-4">
         <p className="text-muted-foreground text-sm">
-          {' '}
           {tCatalog(`categories.${course.category}`)} ·{' '}
           {tCatalog(`levels.${course.level}`)} ·{' '}
           {tCatalog(`languages.${course.language}`)}
