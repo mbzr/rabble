@@ -4,6 +4,7 @@ import { user } from '@/db/schema/auth'
 import { courses } from '@/db/schema/courses'
 import { lessons } from '@/db/schema/lessons'
 import { videos } from '@/db/schema/videos'
+import { enrolments } from '@/db/schema/enrolments'
 
 export const createUser = async (
   values: Partial<typeof user.$inferInsert> = {},
@@ -94,4 +95,28 @@ export const createLesson = async ({
   }
 
   return lesson
+}
+
+interface CreateEnrolmentParms extends Partial<typeof enrolments.$inferInsert> {
+  learner: { id: string }
+  course: { id: string }
+}
+
+export const createEnrolment = async ({
+  learner,
+  course,
+  ...values
+}: CreateEnrolmentParms) => {
+  const result = await db
+    .insert(enrolments)
+    .values({
+      userId: learner.id,
+      courseId: course.id,
+      ...values,
+    })
+    .returning()
+
+  const row = result[0]
+  if (!row) throw new Error('insert returned no enrolment')
+  return row
 }

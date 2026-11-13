@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { cacheTag } from 'next/cache'
+import { and, asc, count, desc, eq, not, sum } from 'drizzle-orm'
 import {
   COURSE_CATEGORIES,
   type CatalogFilters,
@@ -9,12 +10,13 @@ import {
   type CourseLanguage,
   type CourseLevel,
 } from '@/lib/schemas/course'
-import { and, asc, count, desc, eq, not, type SQL, sum } from 'drizzle-orm'
 import { courses } from '@/db/schema/courses'
 import { lessons } from '@/db/schema/lessons'
 import { db } from '@/db'
 import { videos } from '@/db/schema/videos'
 import { user } from '@/db/schema/auth'
+import { requireUser } from './current-user'
+import { enrolments } from '@/db/schema/enrolments'
 
 export interface CourseSummary {
   id: string
@@ -57,7 +59,7 @@ const lessonTotals = db
   .groupBy(lessons.courseId)
   .as('lesson_totals')
 
-const selectCourseSummaries = (where: SQL | undefined) => {
+const selectCourseSummaries = () => {
   return db
     .select({
       id: courses.id,
@@ -75,8 +77,6 @@ const selectCourseSummaries = (where: SQL | undefined) => {
     .from(courses)
     .innerJoin(user, eq(user.id, courses.ownerId))
     .leftJoin(lessonTotals, eq(lessonTotals.courseId, courses.id))
-    .where(where)
-    .orderBy(desc(courses.publishedAt))
 }
 
 const toCourseSummary = (row: CourseSummaryRow): CourseSummary => ({
@@ -89,8 +89,10 @@ export const listRecentCourses = async (): Promise<CourseSummary[]> => {
   'use cache'
   cacheTag('catalog')
 
-  const rows =
-    await selectCourseSummaries(isInCatalog).limit(RECENT_COURSES_LIMIT)
+  const rows = await selectCourseSummaries()
+    .where(isInCatalog)
+    .orderBy(desc(courses.publishedAt))
+    .limit(RECENT_COURSES_LIMIT)
 
   return rows.map(toCourseSummary)
 }
@@ -101,15 +103,17 @@ export const listPublishedCourses = async (
   'use cache'
   cacheTag('catalog')
 
-  const rows = await selectCourseSummaries(
-    and(
-      isInCatalog,
-      filters.category ? eq(courses.category, filters.category) : undefined,
-      filters.language ? eq(courses.language, filters.language) : undefined,
-      filters.level ? eq(courses.level, filters.level) : undefined,
-      filters.access ? eq(courses.access, filters.access) : undefined,
-    ),
-  )
+  const rows = await selectCourseSummaries()
+    .where(
+      and(
+        isInCatalog,
+        filters.category ? eq(courses.category, filters.category) : undefined,
+        filters.language ? eq(courses.language, filters.language) : undefined,
+        filters.level ? eq(courses.level, filters.level) : undefined,
+        filters.access ? eq(courses.access, filters.access) : undefined,
+      ),
+    )
+    .orderBy(desc(courses.publishedAt))
 
   return rows.map(toCourseSummary)
 }
@@ -195,4 +199,15 @@ export const getCourseBySlug = async (
       0,
     ),
   }
+}
+
+export const listMyCourses = async (): Promise<CourseSummary[]> => {
+  const currentUser = await requireUser()
+
+  const rows = await selectCourseSummaries()
+    .innerJoin(enrolments, eq(enrolments.courseId, courses.id))
+    .where(eq(enrolments.userId, currentUser.id))
+    .orderBy(desc(enrolments.createdAt))
+
+  return rows.map(toCourseSummary)
 }
