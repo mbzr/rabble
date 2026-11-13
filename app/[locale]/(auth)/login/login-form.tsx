@@ -9,8 +9,13 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { withNext } from '@/lib/safe-next'
 
-export const LoginForm = () => {
+interface LoginPageProps {
+  next: string | null
+}
+
+export const LoginForm = ({ next }: LoginPageProps) => {
   const t = useTranslations('Auth')
   const tErrors = useTranslations('Errors')
   const router = useRouter()
@@ -33,7 +38,7 @@ export const LoginForm = () => {
       setError(tErrors(authErrorKey(error.code)))
       return
     }
-    router.push('/')
+    router.push(next || '/')
     router.refresh()
   }
 
@@ -89,7 +94,7 @@ export const LoginForm = () => {
 
       <p className="text-muted-foreground text-center text-sm">
         {t('noAccount')}{' '}
-        <Link href="/signup" className="underline">
+        <Link href={withNext('/signup', next)} className="underline">
           {t('signUpLink')}
         </Link>
       </p>

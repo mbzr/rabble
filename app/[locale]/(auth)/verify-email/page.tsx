@@ -1,8 +1,10 @@
 import { getTranslations } from 'next-intl/server'
-import { Suspense } from 'react'
 import { z } from 'zod'
+import { Suspense } from 'react'
 import { Link } from '@/i18n/navigation'
 import { getCurrentUser } from '@/lib/server/current-user'
+import { safeNextPath, withNext } from '@/lib/safe-next'
+import { env } from '@/env'
 
 type VerifyEmailPageProps = PageProps<'/[locale]/verify-email'>
 
@@ -17,6 +19,7 @@ const VerifyEmailStatus = async ({
     getTranslations('Auth'),
   ])
   const { error } = searchParamsSchema.parse(params)
+  const next = safeNextPath(params.next, env.BETTER_AUTH_URL)
 
   if (error) {
     return (
@@ -24,7 +27,7 @@ const VerifyEmailStatus = async ({
         <h1 className="text-3xl font-semibold">{t('linkExpiredTitle')}</h1>
         <p className="text-muted-foreground">{t('linkExpiredBody')}</p>
         <Link
-          href="/login"
+          href={withNext('/login', next)}
           className="text-primary underline underline-offset-4"
         >
           {t('goToLogin')}
@@ -38,8 +41,11 @@ const VerifyEmailStatus = async ({
       <div className="flex flex-col gap-6">
         <h1 className="text-3xl font-semibold">{t('emailConfirmedTitle')}</h1>
         <p className="text-muted-foreground">{t('emailConfirmedBody')}</p>
-        <Link href="/" className="text-primary underline underline-offset-4">
-          {t('goHome')}
+        <Link
+          href={next ?? '/'}
+          className="text-primary underline underline-offset-4"
+        >
+          {next ? t('continue') : t('goHome')}
         </Link>
       </div>
     )

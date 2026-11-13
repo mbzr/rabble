@@ -51,7 +51,8 @@
     "passwordUpdatedBody": "For your security, you've been signed out on all devices. Log in with your new password.",
     "resetLinkInvalidTitle": "This link has expired",
     "resetLinkInvalidBody": "Reset links work once and only for a limited time. Ask for a new one below.",
-    "requestNewLink": "Send a new link"
+    "requestNewLink": "Send a new link",
+    "continue": "Continue"
   },
   "Errors": {
     "generic": "Something went wrong. Please try again.",

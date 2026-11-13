@@ -21,6 +21,7 @@ import {
 import { getCurrentUser } from '@/lib/server/current-user'
 import { getMyEnrolmentForCourse } from '@/lib/server/enrolments'
 import { EnrolButton } from './enrol-button'
+import { withNext } from '@/lib/safe-next'
 
 type CoursePageProps = PageProps<'/[locale]/courses/[slug]'>
 
@@ -61,10 +62,7 @@ const CourseAction = async ({ course }: CourseActionProps) => {
   if (!user) {
     return (
       <Link
-        href={{
-          pathname: '/login',
-          query: { next: `/courses/${course.slug}` },
-        }}
+        href={withNext('/login', `/courses/${course.slug}`)}
         className={buttonVariants({ size: 'lg' })}
       >
         {t('signInToStart')}

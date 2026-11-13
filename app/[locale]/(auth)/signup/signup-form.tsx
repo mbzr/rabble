@@ -14,8 +14,13 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { withNext } from '@/lib/safe-next'
 
-export const SignupForm = () => {
+interface SignupFormProps {
+  next: string | null
+}
+
+export const SignupForm = ({ next }: SignupFormProps) => {
   const t = useTranslations('Auth')
   const tErrors = useTranslations('Errors')
   const router = useRouter()
@@ -42,7 +47,11 @@ export const SignupForm = () => {
       setError(tErrors(authErrorKey(error.code)))
       return
     }
-    router.push('/verify-email')
+    router.push(
+      next
+        ? `/${locale}/verify-email?next=${encodeURIComponent(next)}`
+        : '/verify-email',
+    )
   }
 
   return (
@@ -99,7 +108,7 @@ export const SignupForm = () => {
       <p className="text-muted-foreground text-center text-sm">
         {t('haveAccount')}{' '}
         <Link
-          href="/login"
+          href={withNext('/login', next)}
           className="text-primary underline underline-offset-4"
         >
           {t('signInLink')}
