@@ -13,6 +13,21 @@ jobs:
   checks:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # The build prerenders pages that query the database, like Vercel's build does
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: rabble
+          POSTGRES_PASSWORD: rabble
+          POSTGRES_DB: rabble
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U rabble"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     env:
       DATABASE_URL: postgres://rabble:rabble@localhost:5432/rabble
       RABBLE_AWS_ACCESS_KEY_ID: ci-placeholder
@@ -33,6 +48,7 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run format:check
+      - run: npm run db:migrate
       - run: npm run build
   test:
     runs-on: ubuntu-latest
