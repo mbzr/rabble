@@ -38,6 +38,8 @@ jobs:
       BETTER_AUTH_URL: http://localhost:3000
       RESEND_API_KEY: ci-placeholder
       EMAIL_FROM: Rabble <ci@example.com>
+      MUX_SIGNING_KEY: ci-placeholder
+      MUX_PRIVATE_KEY: ci-placeholder
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5

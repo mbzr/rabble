@@ -13,6 +13,8 @@ const schema = z.object({
   BETTER_AUTH_URL: z.url(),
   RESEND_API_KEY: z.string().min(1),
   EMAIL_FROM: z.string().min(1),
+  MUX_SIGNING_KEY: z.string().min(1),
+  MUX_PRIVATE_KEY: z.string().min(1),
 })
 
 const parsed = schema.safeParse(process.env)
