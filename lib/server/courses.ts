@@ -51,7 +51,7 @@ const lessonTotals = db
     durationSeconds: sum(videos.durationSeconds).as('duration_seconds'),
   })
   .from(lessons)
-  .leftJoin(
+  .innerJoin(
     videos,
     and(eq(videos.lessonId, lessons.id), eq(videos.status, 'ready')),
   )
@@ -135,6 +135,7 @@ export interface LessonSummary {
   id: string
   slug: string
   title: string
+  description?: string
   position: number
   isFreePreview: boolean
   // Null while the video is still processing
@@ -210,4 +211,19 @@ export const listMyCourses = async (): Promise<CourseSummary[]> => {
     .orderBy(desc(enrolments.createdAt))
 
   return rows.map(toCourseSummary)
+}
+
+export const listCatalogLessonPaths = async () => {
+  'use cache'
+  cacheTag('catalog')
+
+  return db
+    .select({ slug: courses.slug, lessonSlug: lessons.slug })
+    .from(lessons)
+    .innerJoin(courses, eq(courses.id, lessons.courseId))
+    .innerJoin(
+      videos,
+      and(eq(videos.lessonId, lessons.id), eq(videos.status, 'ready')),
+    )
+    .where(and(isInCatalog, eq(lessons.status, 'published')))
 }

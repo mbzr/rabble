@@ -137,9 +137,9 @@
     "not_found": "We couldn't find that. It may have been removed."
   },
   "Lesson": {
-    "title": "Lesson",
     "lessons": "Lessons",
-    "placeholder": "The video player will appear here."
+    "lockedTitle": "This lesson is locked",
+    "lockedBody": "Enrol in the course to watch it. Premium courses need a subscription."
   },
   "MyLearning": {
     "title": "My learning",

@@ -3,7 +3,6 @@ import { BookOpenIcon } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
-import { buttonVariants } from '@/components/ui/button'
 import {
   Empty,
   EmptyDescription,
@@ -12,16 +11,8 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Link } from '@/i18n/navigation'
-import {
-  type CourseDetail,
-  getCourseBySlug,
-  listPublishedCourses,
-} from '@/lib/server/courses'
-import { getCurrentUser } from '@/lib/server/current-user'
-import { getMyEnrolmentForCourse } from '@/lib/server/enrolments'
-import { EnrolButton } from './enrol-button'
-import { withNext } from '@/lib/safe-next'
+import { getCourseBySlug, listPublishedCourses } from '@/lib/server/courses'
+import { CourseAction } from './course-action'
 
 type CoursePageProps = PageProps<'/[locale]/courses/[slug]'>
 
@@ -42,51 +33,6 @@ export const generateMetadata = async ({ params }: CoursePageProps) => {
     title: course.title,
     description: course.description,
   }
-}
-
-interface CourseActionProps {
-  course: CourseDetail
-}
-
-const CourseAction = async ({ course }: CourseActionProps) => {
-  const [user, enrolment, t] = await Promise.all([
-    getCurrentUser(),
-    getMyEnrolmentForCourse(course.id),
-    getTranslations('Course'),
-  ])
-  const [firstLesson] = course.lessons
-  if (!firstLesson) return null
-
-  const firstLessonHref = `/courses/${course.slug}/lessons/${firstLesson.slug}`
-
-  if (!user) {
-    return (
-      <Link
-        href={withNext('/login', `/courses/${course.slug}`)}
-        className={buttonVariants({ size: 'lg' })}
-      >
-        {t('signInToStart')}
-      </Link>
-    )
-  }
-
-  if (enrolment) {
-    return (
-      <Link href={firstLessonHref} className={buttonVariants({ size: 'lg' })}>
-        {t('continue')}
-      </Link>
-    )
-  }
-
-  if (course.access === 'premium') {
-    return (
-      <Link href="/pricing" className={buttonVariants({ size: 'lg' })}>
-        {t('subscribeToUnlock')}
-      </Link>
-    )
-  }
-
-  return <EnrolButton courseId={course.id} firstLessonHref={firstLessonHref} />
 }
 
 const CoursePage = async ({ params }: CoursePageProps) => {

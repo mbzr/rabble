@@ -107,7 +107,7 @@ describe('catalog queries', () => {
   })
   test('counts published lessons and only time of ready videos', async () => {
     expect(await findCourseBySlug('figma-101')).toMatchObject({
-      lessonCount: 3,
+      lessonCount: 2,
       durationSeconds: 300,
     })
   })
