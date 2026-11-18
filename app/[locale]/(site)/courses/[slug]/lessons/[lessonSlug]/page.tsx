@@ -69,9 +69,12 @@ const LessonVideo = async ({ course, lesson }: LessonVideoProps) => {
 
   return (
     <LessonPlayer
+      lessonId={lesson.id}
       playbackId={playback.playbackId}
       tokens={playback.tokens}
       title={lesson.title}
+      startSeconds={playback.startSeconds}
+      savesProgress={playback.savesProgress}
     />
   )
 }

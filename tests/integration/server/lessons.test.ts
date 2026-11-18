@@ -1,4 +1,5 @@
 import { getLessonPlayback } from '@/lib/server/lessons'
+import { saveLessonProgress } from '@/lib/server/progress'
 import { signInAs, signOut } from '@/tests/auth'
 import {
   createCourse,
@@ -79,6 +80,43 @@ describe('getLessonPlayback', () => {
 
     expect(await getLessonPlayback(lesson.id)).toMatchObject({
       canView: true,
+    })
+  })
+
+  test('resumes where you left off', async () => {
+    const owner = await createUser({ role: 'instructor' })
+    const learner = await createUser()
+    const course = await createCourse({ owner })
+    const lesson = await createLesson({
+      course,
+      video: { durationSeconds: 60 },
+    })
+    await createEnrolment({ learner, course })
+    await signInAs(learner)
+
+    await saveLessonProgress(lesson.id, 25)
+
+    expect(await getLessonPlayback(lesson.id)).toMatchObject({
+      startSeconds: 25,
+      savesProgress: true,
+    })
+  })
+
+  test('starts again from the beginning after finishing', async () => {
+    const owner = await createUser({ role: 'instructor' })
+    const learner = await createUser()
+    const course = await createCourse({ owner })
+    const lesson = await createLesson({
+      course,
+      video: { durationSeconds: 60 },
+    })
+    await createEnrolment({ learner, course })
+    await signInAs(learner)
+
+    await saveLessonProgress(lesson.id, 58)
+
+    expect(await getLessonPlayback(lesson.id)).toMatchObject({
+      startSeconds: 0,
     })
   })
 })
