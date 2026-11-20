@@ -43,7 +43,7 @@ describe('saveLessonProgress', () => {
     await saveLessonProgress(lesson.id, 30)
     const progress = await readProgress(learner.id, lesson.id)
     expect(progress).toMatchObject({
-      positionSeconds: 30,
+      lastPositionSeconds: 30,
       completedAt: null,
     })
   })
@@ -53,7 +53,7 @@ describe('saveLessonProgress', () => {
     await saveLessonProgress(lesson.id, 120)
     const progress = await readProgress(learner.id, lesson.id)
     expect(progress).toMatchObject({
-      positionSeconds: 60,
+      lastPositionSeconds: 60,
     })
   })
 

@@ -1,0 +1,78 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "7e22a907-7f65-4eb3-a3b1-8f07d2bb24d9",
+  "prevIds": ["9c480f6b-e864-4ebf-8eb2-fca0c5a16055"],
+  "footprints": [
+    {
+      "statementType": "rename_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "lesson_progress",
+        "position_seconds"
+      ],
+      "writes": [
+        "s|col|public.lesson_progress.position_seconds",
+        "n|col|public.lesson_progress.position_seconds",
+        "s|col|public.lesson_progress.last_position_seconds",
+        "n|col|public.lesson_progress.last_position_seconds"
+      ],
+      "reads": ["n|tbl|public.lesson_progress", "n|sch|public"]
+    },
+    {
+      "statementType": "rename_constraint",
+      "statementTarget": ["table", "public", "lesson_progress"],
+      "writes": [
+        "s|ck|public.lesson_progress.lesson_progress_position_check",
+        "n|ck|public.lesson_progress.lesson_progress_position_check",
+        "n|con|public.lesson_progress.lesson_progress_position_check",
+        "s|ck|public.lesson_progress.lesson_progress_last_position_check",
+        "n|ck|public.lesson_progress.lesson_progress_last_position_check",
+        "n|con|public.lesson_progress.lesson_progress_last_position_check"
+      ],
+      "reads": [
+        "n|tbl|public.lesson_progress",
+        "n|sch|public",
+        "e|col|public.lesson_progress.last_position_seconds"
+      ]
+    },
+    {
+      "statementType": "alter_check",
+      "statementTarget": ["table", "public", "lesson_progress"],
+      "writes": [
+        "s|ck|public.lesson_progress.lesson_progress_last_position_check"
+      ],
+      "reads": [
+        "n|tbl|public.lesson_progress",
+        "n|sch|public",
+        "n|col|public.lesson_progress.last_position_seconds"
+      ],
+      "sqlHash": "d3b8c84e001af062"
+    }
+  ],
+  "deltas": [
+    {
+      "op": "rename",
+      "key": "columns\u0000[\"public\",\"lesson_progress\",\"position_seconds\"]",
+      "set": {
+        "name": "last_position_seconds"
+      }
+    },
+    {
+      "op": "rename",
+      "key": "checks\u0000[\"public\",\"lesson_progress\",\"lesson_progress_position_check\"]",
+      "set": {
+        "name": "lesson_progress_last_position_check"
+      }
+    },
+    {
+      "op": "alter",
+      "key": "checks\u0000[\"public\",\"lesson_progress\",\"lesson_progress_last_position_check\"]",
+      "set": {
+        "value": "\"last_position_seconds\" >= 0"
+      }
+    }
+  ]
+}

@@ -69,7 +69,8 @@ export const LessonPlayer = ({
       metadata={{
         video_title: title,
       }}
-      className="aspect-video w-full overflow-hidden rounded-lg"
+      className="w-full overflow-hidden rounded-lg"
+      style={{ aspectRatio: '16/9' }}
       onTimeUpdate={(e) => {
         position.current = (e.target as HTMLMediaElement).currentTime
         if (position.current - lastSaved.current >= SAVE_EVERY_SECONDS) {

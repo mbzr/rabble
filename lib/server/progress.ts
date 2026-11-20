@@ -1,3 +1,4 @@
+import 'server-only'
 import { and, eq, isNull } from 'drizzle-orm'
 import { lessonProgress } from '@/db/schema/lesson-progress'
 import { requireUser } from './current-user'
@@ -7,7 +8,7 @@ import { db } from '@/db'
 
 export const saveLessonProgress = async (
   lessonId: string,
-  positionSeconds: number,
+  lastPositionSeconds: number,
 ) => {
   const currentUser = await requireUser()
   const lesson = await loadLessonAccess(lessonId, currentUser)
@@ -17,7 +18,7 @@ export const saveLessonProgress = async (
 
   // clamp the position to the lesson duration
   const position = Math.min(
-    Math.max(0, Math.floor(positionSeconds)),
+    Math.max(0, Math.floor(lastPositionSeconds)),
     lesson.durationSeconds,
   )
 
@@ -26,11 +27,11 @@ export const saveLessonProgress = async (
     .values({
       userId: currentUser.id,
       lessonId,
-      positionSeconds: position,
+      lastPositionSeconds: position,
     })
     .onConflictDoUpdate({
       target: [lessonProgress.userId, lessonProgress.lessonId],
-      set: { positionSeconds: position, updatedAt: new Date() },
+      set: { lastPositionSeconds: position, updatedAt: new Date() },
     })
 
   // if the lesson is 90% watched, mark it as completed

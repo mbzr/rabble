@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { saveLessonProgress } from '@/lib/server/progress'
-import { AppErrorCode, toErrorCode } from '@/lib/server/errors'
+import { type AppErrorCode, toErrorCode } from '@/lib/server/errors'
 
 const bodySchema = z.object({
   lessonId: z.uuid(),

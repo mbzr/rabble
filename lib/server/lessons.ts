@@ -87,7 +87,7 @@ export const getLessonPlayback = async (
 
   const [progress] = currentUser
     ? await db
-        .select({ positionSeconds: lessonProgress.positionSeconds })
+        .select({ lastPositionSeconds: lessonProgress.lastPositionSeconds })
         .from(lessonProgress)
         .where(
           and(
@@ -96,7 +96,7 @@ export const getLessonPlayback = async (
           ),
         )
     : []
-  const saved = progress?.positionSeconds ?? 0
+  const saved = progress?.lastPositionSeconds ?? 0
 
   return {
     canView: true,

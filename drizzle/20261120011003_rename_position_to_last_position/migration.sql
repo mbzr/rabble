@@ -1,0 +1,3 @@
+ALTER TABLE "lesson_progress" RENAME COLUMN "position_seconds" TO "last_position_seconds";--> statement-breakpoint
+ALTER TABLE "lesson_progress" RENAME CONSTRAINT "lesson_progress_position_check" TO "lesson_progress_last_position_check";--> statement-breakpoint
+ALTER TABLE "lesson_progress" DROP CONSTRAINT "lesson_progress_last_position_check", ADD CONSTRAINT "lesson_progress_last_position_check" CHECK ("last_position_seconds" >= 0);

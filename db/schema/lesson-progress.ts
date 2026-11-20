@@ -20,7 +20,7 @@ export const lessonProgress = pgTable(
     lessonId: uuid('lesson_id')
       .notNull()
       .references(() => lessons.id, { onDelete: 'cascade' }),
-    positionSeconds: integer('position_seconds').notNull().default(0),
+    lastPositionSeconds: integer('last_position_seconds').notNull().default(0),
     completedAt: timestamp('completed_at', { withTimezone: true }),
     updatedAt: timestamp('updated_at', { withTimezone: true })
       .notNull()
@@ -32,6 +32,9 @@ export const lessonProgress = pgTable(
       table.userId,
       table.updatedAt.desc(),
     ), // most recently watched lessons first
-    check('lesson_progress_position_check', sql`${table.positionSeconds} >= 0`),
+    check(
+      'lesson_progress_last_position_check',
+      sql`${table.lastPositionSeconds} >= 0`,
+    ),
   ],
 )
