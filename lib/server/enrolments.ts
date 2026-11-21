@@ -1,33 +1,8 @@
 import 'server-only'
-import { getCurrentUser, requireUser } from './current-user'
+import { getCurrentUser } from './current-user'
 import { db } from '@/db'
-import { courses } from '@/db/schema/courses'
 import { and, eq } from 'drizzle-orm'
-import { ForbiddenError, NotFoundError } from './errors'
-import { canEnrolInCourse } from './policies'
 import { enrolments } from '@/db/schema/enrolments'
-
-export const enrolInCourse = async (courseId: string) => {
-  const user = await requireUser()
-
-  const [course] = await db
-    .select({
-      status: courses.status,
-      access: courses.access,
-      isSandbox: courses.isSandbox,
-    })
-    .from(courses)
-    .where(eq(courses.id, courseId))
-
-  if (!course) throw new NotFoundError('Course not found')
-  if (!canEnrolInCourse(course))
-    throw new ForbiddenError('You cannot enrol in this course')
-
-  await db
-    .insert(enrolments)
-    .values({ userId: user.id, courseId })
-    .onConflictDoNothing()
-}
 
 export const getMyEnrolmentForCourse = async (
   courseId: string,

@@ -6,7 +6,6 @@ import { courses } from '@/db/schema/courses'
 import { lessons } from '@/db/schema/lessons'
 import { videos } from '@/db/schema/videos'
 import { and, eq } from 'drizzle-orm'
-import { enrolments } from '@/db/schema/enrolments'
 import { canViewLesson } from './policies'
 import { lessonProgress } from '@/db/schema/lesson-progress'
 
@@ -46,16 +45,6 @@ export const loadLessonAccess = async (
 
   if (!row?.playbackId || row.durationSeconds === null) return null
 
-  const isEnrolled = currentUser
-    ? (await db.$count(
-        enrolments,
-        and(
-          eq(enrolments.courseId, row.courseId),
-          eq(enrolments.userId, currentUser.id),
-        ),
-      )) > 0
-    : false
-
   const canView = canViewLesson({
     user: currentUser,
     course: {
@@ -65,11 +54,11 @@ export const loadLessonAccess = async (
     lesson: {
       isFreePreview: row.isFreePreview,
     },
-    isEnrolled,
     hasPremiumAccess: false,
   })
 
   return {
+    courseId: row.courseId,
     playbackId: row.playbackId,
     durationSeconds: row.durationSeconds,
     canView,
@@ -105,5 +94,17 @@ export const getLessonPlayback = async (
     // watch from the last saved position if it's less than 90% of the lesson
     startSeconds: saved < lesson.durationSeconds * COMPLETE_AT ? saved : 0,
     savesProgress: currentUser !== null,
+  }
+}
+
+// the course page's preview. Checked as a visitor, so it can only ever be a free lesson,
+// even for a subscriber or the course owner. No progress, always from the start
+export const getPreviewPlayback = async (lessonId: string) => {
+  const lesson = await loadLessonAccess(lessonId, null)
+  if (!lesson?.canView) return null
+
+  return {
+    playbackId: lesson.playbackId,
+    tokens: await signPlaybackTokens(lesson.playbackId),
   }
 }

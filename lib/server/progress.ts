@@ -5,6 +5,7 @@ import { requireUser } from './current-user'
 import { ForbiddenError, NotFoundError } from './errors'
 import { COMPLETE_AT, loadLessonAccess } from './lessons'
 import { db } from '@/db'
+import { enrolments } from '@/db/schema/enrolments'
 
 export const saveLessonProgress = async (
   lessonId: string,
@@ -33,6 +34,11 @@ export const saveLessonProgress = async (
       target: [lessonProgress.userId, lessonProgress.lessonId],
       set: { lastPositionSeconds: position, updatedAt: new Date() },
     })
+
+  await db
+    .insert(enrolments)
+    .values({ userId: currentUser.id, courseId: lesson.courseId })
+    .onConflictDoNothing()
 
   // if the lesson is 90% watched, mark it as completed
   if (position >= lesson.durationSeconds * COMPLETE_AT) {

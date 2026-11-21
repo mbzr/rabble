@@ -1,4 +1,4 @@
-import { getLessonPlayback } from '@/lib/server/lessons'
+import { getLessonPlayback, getPreviewPlayback } from '@/lib/server/lessons'
 import { saveLessonProgress } from '@/lib/server/progress'
 import { signInAs, signOut } from '@/tests/auth'
 import {
@@ -34,32 +34,39 @@ describe('getLessonPlayback', () => {
     })
   })
 
-  test('an enrolled learner can watch a free course', async () => {
-    const onwer = await createUser({ role: 'instructor' })
-    const learner = await createUser()
-    const course = await createCourse({ owner: onwer, access: 'free' })
+  test('a visitor can watch any lesson of a Free course', async () => {
+    const owner = await createUser({ role: 'instructor' })
+    const course = await createCourse({ owner, access: 'free' })
     const lesson = await createLesson({
       course,
       video: {},
     })
-    await createEnrolment({ learner, course })
-
-    await signInAs(learner)
 
     expect(await getLessonPlayback(lesson.id)).toMatchObject({
       canView: true,
+      savesProgress: false,
     })
   })
 
-  test('a non-enrolled learner cannot watch a premium course', async () => {
-    const onwer = await createUser({ role: 'instructor' })
-    const learner = await createUser()
-    const course = await createCourse({ owner: onwer, access: 'premium' })
+  test('a visitor gets no tokens for a Premium lesson', async () => {
+    const owner = await createUser({ role: 'instructor' })
+    const course = await createCourse({ owner, access: 'premium' })
     const lesson = await createLesson({
       course,
       video: {},
     })
-    await createEnrolment({ learner, course })
+
+    expect(await getLessonPlayback(lesson.id)).toEqual({ canView: false })
+  })
+
+  test('a learner without a subscription cannot watch a premium course', async () => {
+    const owner = await createUser({ role: 'instructor' })
+    const learner = await createUser()
+    const course = await createCourse({ owner, access: 'premium' })
+    const lesson = await createLesson({
+      course,
+      video: {},
+    })
 
     await signInAs(learner)
 
@@ -118,5 +125,29 @@ describe('getLessonPlayback', () => {
     expect(await getLessonPlayback(lesson.id)).toMatchObject({
       startSeconds: 0,
     })
+  })
+})
+
+describe('getPreviewPlayback', () => {
+  afterEach(() => signOut())
+
+  test('plays a lesson of a Free course', async () => {
+    const owner = await createUser({ role: 'instructor' })
+    const course = await createCourse({ owner })
+    const lesson = await createLesson({ course, video: {} })
+
+    expect(await getPreviewPlayback(lesson.id)).toMatchObject({
+      tokens: { playback: expect.any(String) },
+    })
+  })
+
+  test('never plays a Premium lesson, even for its owner', async () => {
+    const owner = await createUser({ role: 'instructor' })
+    const course = await createCourse({ owner, access: 'premium' })
+    const lesson = await createLesson({ course, video: {} })
+
+    await signInAs(owner)
+
+    expect(await getPreviewPlayback(lesson.id)).toBeNull()
   })
 })

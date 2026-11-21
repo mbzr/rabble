@@ -27,7 +27,6 @@ interface LessonViewing {
   user: Viewer | null
   course: { ownerId: string; access: CourseAccess }
   lesson: { isFreePreview: boolean }
-  isEnrolled: boolean
   hasPremiumAccess: boolean
 }
 
@@ -35,11 +34,9 @@ export const canViewLesson = ({
   user,
   course,
   lesson,
-  isEnrolled,
   hasPremiumAccess,
 }: LessonViewing) => {
-  if (lesson.isFreePreview) return true
+  if (lesson.isFreePreview || course.access === 'free') return true
   if (canEditCourse(user, course)) return true
-  if (!user || !isEnrolled) return false
-  return course.access === 'free' || hasPremiumAccess
+  return user !== null && hasPremiumAccess
 }

@@ -3,7 +3,7 @@ import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { LockIcon } from 'lucide-react'
 import { getLessonPlayback } from '@/lib/server/lessons'
-import { LessonPlayer } from './lesson-player'
+import { LessonPlayer } from '@/components/lesson/lesson-player'
 import { CourseAction } from '../../course-action'
 import {
   type CourseDetail,
@@ -13,6 +13,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { Link } from '@/i18n/navigation'
 import { Badge } from '@/components/ui/badge'
+import { withNext } from '@/lib/safe-next'
 
 type LessonPageProps =
   PageProps<'/[locale]/courses/[slug]/lessons/[lessonSlug]'>
@@ -68,14 +69,29 @@ const LessonVideo = async ({ course, lesson }: LessonVideoProps) => {
   if (!playback.playbackId) return null
 
   return (
-    <LessonPlayer
-      lessonId={lesson.id}
-      playbackId={playback.playbackId}
-      tokens={playback.tokens}
-      title={lesson.title}
-      startSeconds={playback.startSeconds}
-      savesProgress={playback.savesProgress}
-    />
+    <div className="flex flex-col gap-2">
+      <LessonPlayer
+        lessonId={lesson.id}
+        playbackId={playback.playbackId}
+        tokens={playback.tokens}
+        title={lesson.title}
+        startSeconds={playback.startSeconds}
+        savesProgress={playback.savesProgress}
+      />
+      {playback.savesProgress ? null : (
+        <p className="text-muted-foreground text-sm">
+          <Link
+            href={withNext(
+              '/login',
+              `/courses/${course.slug}/lessons/${lesson.slug}`,
+            )}
+            className="text-primary underline underline-offset-4"
+          >
+            {t('signInToSaveProgress')}
+          </Link>
+        </p>
+      )}
+    </div>
   )
 }
 

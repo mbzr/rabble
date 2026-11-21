@@ -1,5 +1,6 @@
 import { db } from '@/db'
 import { lessonProgress } from '@/db/schema/lesson-progress'
+import { listMyCourses } from '@/lib/server/courses'
 import { ForbiddenError, UnauthenticatedError } from '@/lib/server/errors'
 import { saveLessonProgress } from '@/lib/server/progress'
 import { signInAs, signOut } from '@/tests/auth'
@@ -17,7 +18,6 @@ const setup = async () => {
   const learner = await createUser()
   const course = await createCourse({ owner })
   const lesson = await createLesson({ course, video: { durationSeconds: 60 } })
-  await createEnrolment({ course, learner })
   await signInAs(learner)
   return { learner, lesson }
 }
@@ -37,6 +37,14 @@ const readProgress = async (userId: string, lessonId: string) => {
 
 describe('saveLessonProgress', () => {
   afterEach(() => signOut())
+
+  test('your first save adds the course to My learning', async () => {
+    const { lesson } = await setup()
+
+    await saveLessonProgress(lesson.id, 10)
+
+    expect(await listMyCourses()).toMatchObject([{ id: lesson.courseId }])
+  })
 
   test('should save progress', async () => {
     const { learner, lesson } = await setup()

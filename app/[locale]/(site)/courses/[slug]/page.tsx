@@ -11,8 +11,15 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty'
 import { Skeleton } from '@/components/ui/skeleton'
-import { getCourseBySlug, listPublishedCourses } from '@/lib/server/courses'
+import {
+  CourseDetail,
+  getCourseBySlug,
+  listPublishedCourses,
+} from '@/lib/server/courses'
 import { CourseAction } from './course-action'
+import { LessonPlayer } from '@/components/lesson/lesson-player'
+import { getPreviewPlayback } from '@/lib/server/lessons'
+import { cn } from 'cn'
 
 type CoursePageProps = PageProps<'/[locale]/courses/[slug]'>
 
@@ -35,6 +42,39 @@ export const generateMetadata = async ({ params }: CoursePageProps) => {
   }
 }
 
+interface CoursePreviewProps {
+  lesson: CourseDetail['lessons'][number]
+  language: string
+}
+
+// Signed per request, like the lesson page, so it streams in after the cached header
+const CoursePreview = async ({ lesson, language }: CoursePreviewProps) => {
+  const [playback, t] = await Promise.all([
+    getPreviewPlayback(lesson.id),
+    getTranslations('Course'),
+  ])
+  if (!playback) return null
+
+  return (
+    <figure className="flex flex-col gap-2">
+      <LessonPlayer
+        lessonId={lesson.id}
+        playbackId={playback.playbackId}
+        tokens={playback.tokens}
+        title={lesson.title}
+        startSeconds={0}
+        savesProgress={false}
+      />
+      <figcaption className="text-muted-foreground text-sm">
+        Preview:{' '}
+        <span lang={language} dir="auto">
+          {lesson.title}
+        </span>
+      </figcaption>
+    </figure>
+  )
+}
+
 const CoursePage = async ({ params }: CoursePageProps) => {
   const { slug } = await params
   const [course, t, tCatalog] = await Promise.all([
@@ -43,45 +83,64 @@ const CoursePage = async ({ params }: CoursePageProps) => {
     getTranslations('Catalog'),
   ])
   if (!course) notFound()
+  // a free course previews lesson 1. A Premium course previews its first free preview, if any
+  const previewLesson =
+    course.access === 'free'
+      ? course.lessons[0]
+      : course.lessons.find((lesson) => lesson.isFreePreview)
 
   return (
     <div className="flex flex-col gap-12">
-      <header className="flex max-w-prose flex-col gap-4">
-        <p className="text-muted-foreground text-sm">
-          {tCatalog(`categories.${course.category}`)} ·{' '}
-          {tCatalog(`levels.${course.level}`)} ·{' '}
-          {tCatalog(`languages.${course.language}`)}
-        </p>
-        <h1
-          className="text-3xl font-semibold"
-          lang={course.language}
-          dir="auto"
-        >
-          {course.title}
-        </h1>
-        <p lang={course.language} dir="auto">
-          {course.description}
-        </p>
-        <p className="text-muted-foreground text-sm">
-          {tCatalog.rich('byInstructor', {
-            name: course.instructorName,
-            bdi: (chunks) => <bdi>{chunks}</bdi>,
-          })}
-        </p>
-        <div className="flex flex-wrap items-center gap-3 text-sm">
-          <Badge variant={course.access === 'free' ? 'secondary' : 'default'}>
-            {tCatalog(`accessTypes.${course.access}`)}
-          </Badge>
-          <span>
-            {tCatalog('lessonCount', { count: course.lessonCount })} ·{' '}
-            {tCatalog('minutes', {
-              count: Math.ceil(course.durationSeconds / 60),
+      <header
+        className={cn(
+          'grid gap-8',
+          previewLesson && 'md:grid-cols-2 md:items-start',
+        )}
+      >
+        <div className="flex max-w-prose flex-col gap-4">
+          <p className="text-muted-foreground text-sm">
+            {tCatalog(`categories.${course.category}`)} ·{' '}
+            {tCatalog(`levels.${course.level}`)} ·{' '}
+            {tCatalog(`languages.${course.language}`)}
+          </p>
+          <h1
+            className="text-3xl font-semibold"
+            lang={course.language}
+            dir="auto"
+          >
+            {course.title}
+          </h1>
+          <p lang={course.language} dir="auto">
+            {course.description}
+          </p>
+          <p className="text-muted-foreground text-sm">
+            {tCatalog.rich('byInstructor', {
+              name: course.instructorName,
+              bdi: (chunks) => <bdi>{chunks}</bdi>,
             })}
-          </span>
+          </p>
+          <div className="flex flex-wrap items-center gap-3 text-sm">
+            <Badge variant={course.access === 'free' ? 'secondary' : 'default'}>
+              {tCatalog(`accessTypes.${course.access}`)}
+            </Badge>
+            <span>
+              {tCatalog('lessonCount', { count: course.lessonCount })} ·{' '}
+              {tCatalog('minutes', {
+                count: Math.ceil(course.durationSeconds / 60),
+              })}
+            </span>
+          </div>
+          <Suspense fallback={<Skeleton className="h-10 w-40" />}>
+            <CourseAction course={course} />
+          </Suspense>
         </div>
-        <Suspense fallback={<Skeleton className="h-10 w-40" />}>
-          <CourseAction course={course} />
-        </Suspense>
+        {previewLesson ? (
+          <Suspense
+            fallback={<Skeleton className="aspect-video w-full rounded-lg" />}
+          >
+            <CoursePreview lesson={previewLesson} language={course.language} />
+          </Suspense>
+        ) : null}
       </header>
 
       <section

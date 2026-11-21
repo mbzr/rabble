@@ -128,7 +128,8 @@
     "enrol": "Enrol",
     "enrolling": "Enrolling…",
     "continue": "Continue",
-    "subscribeToUnlock": "Subscribe to unlock"
+    "subscribeToUnlock": "Subscribe to unlock",
+    "startCourse": "Start course"
   },
   "ActionErrors": {
     "invalid_input": "Something went wrong with that request. Refresh the page and try again.",
@@ -139,7 +140,8 @@
   "Lesson": {
     "lessons": "Lessons",
     "lockedTitle": "This lesson is locked",
-    "lockedBody": "Enrol in the course to watch it. Premium courses need a subscription."
+    "lockedBody": "This is a Premium lesson. Subscribe to watch it.",
+    "signInToSaveProgress": "Sign in to save your progress"
   },
   "MyLearning": {
     "title": "My learning",
