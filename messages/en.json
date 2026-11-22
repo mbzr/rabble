@@ -129,7 +129,8 @@
     "enrolling": "Enrolling…",
     "continue": "Continue",
     "subscribeToUnlock": "Subscribe to unlock",
-    "startCourse": "Start course"
+    "startCourse": "Start course",
+    "lessonsCompleted": "{completed} of {total} lessons completed"
   },
   "ActionErrors": {
     "invalid_input": "Something went wrong with that request. Refresh the page and try again.",
@@ -141,13 +142,16 @@
     "lessons": "Lessons",
     "lockedTitle": "This lesson is locked",
     "lockedBody": "This is a Premium lesson. Subscribe to watch it.",
-    "signInToSaveProgress": "Sign in to save your progress"
+    "signInToSaveProgress": "Sign in to save your progress",
+    "completed": "Completed"
   },
   "MyLearning": {
     "title": "My learning",
     "emptyTitle": "You haven't enrolled in a course yet",
     "emptyBody": "Courses you enrol in will show up here, with your progress.",
-    "browseCourses": "Browse courses"
+    "browseCourses": "Browse courses",
+    "continueWatching": "Continue watching",
+    "watchedSoFar": "Watched so far"
   },
   "Studio": {
     "title": "Studio",

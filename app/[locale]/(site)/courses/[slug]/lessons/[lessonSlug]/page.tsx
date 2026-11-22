@@ -12,8 +12,9 @@ import {
 } from '@/lib/server/courses'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Link } from '@/i18n/navigation'
-import { Badge } from '@/components/ui/badge'
 import { withNext } from '@/lib/safe-next'
+import { LessonList } from '@/courses/[slug]/lessons/[lessonSlug]/lesson-list'
+import { listCompletedLessonIds } from '@/lib/server/progress'
 
 type LessonPageProps =
   PageProps<'/[locale]/courses/[slug]/lessons/[lessonSlug]'>
@@ -45,6 +46,22 @@ interface LessonVideoProps {
   course: CourseDetail
   lesson: Lesson
 }
+
+interface LessonListWithProgressProps {
+  course: CourseDetail
+  currentLessonId: string
+}
+
+const LessonListWithProgress = async ({
+  course,
+  currentLessonId,
+}: LessonListWithProgressProps) => (
+  <LessonList
+    course={course}
+    currentLessonId={currentLessonId}
+    completedLessonIds={await listCompletedLessonIds(course.id)}
+  />
+)
 
 const LessonVideo = async ({ course, lesson }: LessonVideoProps) => {
   const [playback, t] = await Promise.all([
@@ -139,45 +156,17 @@ const LessonPage = async ({ params }: LessonPageProps) => {
           ) : null}
         </div>
       </div>
-      <nav
-        aria-labelledby="lesson-list-heading"
-        className="flex flex-col gap-4"
+      <Suspense
+        fallback={
+          <LessonList
+            course={course}
+            currentLessonId={lesson.id}
+            completedLessonIds={[]}
+          />
+        }
       >
-        <h2 id="lesson-list-heading" className="text-xl font-semibold">
-          {t('lessons')}
-        </h2>
-        <ol className="divide-y rounded-xl border">
-          {course.lessons.map((item, itemIndex) => (
-            <li key={item.id}>
-              <Link
-                href={`/courses/${course.slug}/lessons/${item.slug}`}
-                aria-current={item.id === lesson.id ? 'page' : undefined}
-                className="hover:bg-accent aria-[current=page]:bg-accent flex items-center gap-3 p-3 text-sm"
-              >
-                <span
-                  className="text-muted-foreground tabular-nums"
-                  aria-hidden
-                >
-                  {itemIndex + 1}
-                </span>
-                <span className="flex-1" lang={course.language} dir="auto">
-                  {item.title}
-                </span>
-                {item.isFreePreview ? (
-                  <Badge variant="outline">{tCourse('freePreview')}</Badge>
-                ) : null}
-                {item.durationSeconds !== null ? (
-                  <span className="text-muted-foreground">
-                    {tCatalog('minutes', {
-                      count: Math.ceil(item.durationSeconds / 60),
-                    })}
-                  </span>
-                ) : null}
-              </Link>
-            </li>
-          ))}
-        </ol>
-      </nav>
+        <LessonListWithProgress course={course} currentLessonId={lesson.id} />
+      </Suspense>
     </div>
   )
 }

@@ -1,11 +1,14 @@
 import 'server-only'
-import { and, eq, isNull } from 'drizzle-orm'
+import { and, desc, eq, isNotNull, isNull } from 'drizzle-orm'
 import { lessonProgress } from '@/db/schema/lesson-progress'
-import { requireUser } from './current-user'
+import { getCurrentUser, requireUser } from './current-user'
 import { ForbiddenError, NotFoundError } from './errors'
 import { COMPLETE_AT, loadLessonAccess } from './lessons'
 import { db } from '@/db'
 import { enrolments } from '@/db/schema/enrolments'
+import { lessons } from '@/db/schema/lessons'
+import { courses } from '@/db/schema/courses'
+import { videos } from '@/db/schema/videos'
 
 export const saveLessonProgress = async (
   lessonId: string,
@@ -53,4 +56,60 @@ export const saveLessonProgress = async (
         ),
       )
   }
+}
+
+// the lessons users finished in this course
+export const listCompletedLessonIds = async (
+  courseId: string,
+): Promise<string[]> => {
+  const currentUser = await getCurrentUser()
+  if (!currentUser) return []
+
+  const rows = await db
+    .select({ lessonId: lessonProgress.lessonId })
+    .from(lessonProgress)
+    .innerJoin(lessons, eq(lessons.id, lessonProgress.lessonId))
+    .where(
+      and(
+        eq(lessonProgress.userId, currentUser.id),
+        eq(lessons.courseId, courseId),
+        isNotNull(lessonProgress.completedAt),
+      ),
+    )
+
+  return rows.map((row) => row.lessonId)
+}
+
+// the last lesson user started but didnt't finish
+export const getContinueWatching = async () => {
+  const currentUser = await requireUser()
+
+  const [row] = await db
+    .select({
+      courseSlug: courses.slug,
+      courseTitle: courses.title,
+      courseLanguage: courses.language,
+      lessonSlug: lessons.slug,
+      lessonTitle: lessons.title,
+      lastPositionSeconds: lessonProgress.lastPositionSeconds,
+      durationSeconds: videos.durationSeconds,
+    })
+    .from(lessonProgress)
+    .innerJoin(lessons, eq(lessons.id, lessonProgress.lessonId))
+    .innerJoin(courses, eq(courses.id, lessons.courseId))
+    .innerJoin(
+      videos,
+      and(eq(videos.lessonId, lessons.id), eq(videos.status, 'ready')),
+    )
+    .where(
+      and(
+        eq(lessonProgress.userId, currentUser.id),
+        isNull(lessonProgress.completedAt),
+        eq(lessons.status, 'published'),
+      ),
+    )
+    .orderBy(desc(lessonProgress.updatedAt))
+    .limit(1)
+
+  return row ?? null
 }

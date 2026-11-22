@@ -2,7 +2,11 @@ import { db } from '@/db'
 import { lessonProgress } from '@/db/schema/lesson-progress'
 import { listMyCourses } from '@/lib/server/courses'
 import { ForbiddenError, UnauthenticatedError } from '@/lib/server/errors'
-import { saveLessonProgress } from '@/lib/server/progress'
+import {
+  getContinueWatching,
+  listCompletedLessonIds,
+  saveLessonProgress,
+} from '@/lib/server/progress'
 import { signInAs, signOut } from '@/tests/auth'
 import {
   createCourse,
@@ -94,5 +98,54 @@ describe('saveLessonProgress', () => {
     await expect(saveLessonProgress(lesson.id, 10)).rejects.toThrow(
       UnauthenticatedError,
     )
+  })
+})
+
+describe('listCompletedLessonIds', () => {
+  afterEach(() => signOut())
+
+  test('lists only the lessons you finished in that course', async () => {
+    const { lesson } = await setup()
+    const otherOwner = await createUser({ role: 'instructor' })
+    const otherCourse = await createCourse({ owner: otherOwner })
+    const otherLesson = await createLesson({
+      course: otherCourse,
+      video: { durationSeconds: 60 },
+    })
+
+    await saveLessonProgress(lesson.id, 60)
+    await saveLessonProgress(otherLesson.id, 60)
+
+    expect(await listCompletedLessonIds(lesson.courseId)).toEqual([lesson.id])
+  })
+
+  test('is empty for visitors', async () => {
+    const owner = await createUser({ role: 'instructor' })
+    const course = await createCourse({ owner })
+
+    expect(await listCompletedLessonIds(course.id)).toEqual([])
+  })
+})
+
+describe('getContinueWatching', () => {
+  afterEach(() => signOut())
+
+  test('is the last lesson you started but did not finish', async () => {
+    const { lesson } = await setup()
+
+    await saveLessonProgress(lesson.id, 20)
+
+    expect(await getContinueWatching()).toMatchObject({
+      lessonSlug: lesson.slug,
+      lastPositionSeconds: 20,
+    })
+  })
+
+  test('skips lessons you finished', async () => {
+    const { lesson } = await setup()
+
+    await saveLessonProgress(lesson.id, 60)
+
+    expect(await getContinueWatching()).toBeNull()
   })
 })
