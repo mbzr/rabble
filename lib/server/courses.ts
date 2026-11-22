@@ -15,7 +15,7 @@ import { lessons } from '@/db/schema/lessons'
 import { db } from '@/db'
 import { videos } from '@/db/schema/videos'
 import { user } from '@/db/schema/auth'
-import { requireUser } from './current-user'
+import { requireRole, requireUser } from './current-user'
 import { enrolments } from '@/db/schema/enrolments'
 
 export interface CourseSummary {
@@ -226,4 +226,31 @@ export const listCatalogLessonPaths = async () => {
       and(eq(videos.lessonId, lessons.id), eq(videos.status, 'ready')),
     )
     .where(and(isInCatalog, eq(lessons.status, 'published')))
+}
+
+// the studio dashboard: your courses, or every course if you are an admin, most recently edited first
+export const listStudioCourses = async () => {
+  const currentUser = await requireRole('instructor', 'admin')
+
+  return db
+    .select({
+      id: courses.id,
+      slug: courses.slug,
+      title: courses.title,
+      status: courses.status,
+      access: courses.access,
+      updatedAt: courses.updatedAt,
+      lessonCount: db.$count(lessons, eq(lessons.courseId, courses.id)),
+      enrolmentCount: db.$count(
+        enrolments,
+        eq(enrolments.courseId, courses.id),
+      ),
+    })
+    .from(courses)
+    .where(
+      currentUser.role === 'admin'
+        ? not(courses.isSandbox)
+        : eq(courses.ownerId, currentUser.id),
+    )
+    .orderBy(desc(courses.updatedAt))
 }
