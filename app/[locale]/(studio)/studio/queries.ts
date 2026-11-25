@@ -1,16 +1,22 @@
 import { graphql } from '@/lib/graphql/generated/client'
 
+export const StudioCourseRowFragment = graphql(`
+  fragment StudioCourseRow on Course {
+    id
+    title
+    status
+    access
+    lessonCount
+    enrolmentCount
+    updatedAt
+  }
+`)
+
 export const StudioCoursesQuery = graphql(`
   query StudioCourses {
     studioCourses {
       id
-      slug
-      title
-      status
-      access
-      lessonCount
-      enrolmentCount
-      updatedAt
+      ...StudioCourseRow
     }
   }
 `)

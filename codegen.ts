@@ -1,4 +1,5 @@
 import type { CodegenConfig } from '@graphql-codegen/cli'
+import { addTypenameSelectionDocumentTransform } from '@graphql-codegen/client-preset'
 
 const config: CodegenConfig = {
   schema: './lib/graphql/type-defs.ts',
@@ -24,7 +25,12 @@ const config: CodegenConfig = {
     // Client: typed documents, fragment masking and the persisted manifest
     './lib/graphql/generated/client/': {
       preset: 'client',
-      presetConfig: { persistedDocuments: true },
+      presetConfig: {
+        persistedDocuments: true,
+      },
+      // addTypenameSelectionDocumentTransform adds __typename to all selections
+      // so the manifest matches what Apollo expects
+      documentTransforms: [addTypenameSelectionDocumentTransform],
       config: { useTypeImports: true, enumsAsTypes: true },
     },
   },

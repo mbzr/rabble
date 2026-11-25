@@ -46,7 +46,8 @@ describe('the GraphQL endpoint in production', () => {
       },
     })
 
-    expect(result).toEqual({ data: { studioCourses: [] } })
+    expect(result).toMatchObject({ data: { studioCourses: [] } })
+    expect(result.errors).toBeUndefined()
   })
 
   test('rejects a GET without the CSRF header', async () => {

@@ -1,3 +1,3 @@
 {
-  "sha256:69de90ece93f5452287061986d578d7997a3c614f0465279d033f11b5bf58b8f": "query StudioCourses { studioCourses { access enrolmentCount id lessonCount slug status title updatedAt } }"
+  "sha256:55754495b0b46302c0722f68eb939a21ed7b278519f256accfb8b809c3ccf4ef": "fragment StudioCourseRow on Course { __typename access enrolmentCount id lessonCount status title updatedAt } query StudioCourses { __typename studioCourses { __typename id ...StudioCourseRow } }"
 }
