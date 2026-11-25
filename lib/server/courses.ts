@@ -254,3 +254,5 @@ export const listStudioCourses = async () => {
     )
     .orderBy(desc(courses.updatedAt))
 }
+
+export type StudioCourse = Awaited<ReturnType<typeof listStudioCourses>>[number]

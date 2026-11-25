@@ -49,7 +49,7 @@ interface CoursePreviewProps {
 
 // Signed per request, like the lesson page, so it streams in after the cached header
 const CoursePreview = async ({ lesson, language }: CoursePreviewProps) => {
-  const [playback, t] = await Promise.all([
+  const [playback] = await Promise.all([
     getPreviewPlayback(lesson.id),
     getTranslations('Course'),
   ])

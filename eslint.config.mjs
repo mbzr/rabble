@@ -113,6 +113,7 @@ const eslintConfig = defineConfig([
       'proxy.ts',
       'i18n/request.ts',
       '*.config.{ts,mjs,js}',
+      'codegen.ts',
     ],
     rules: { 'import/no-default-export': 'off' },
   },
@@ -141,6 +142,14 @@ const eslintConfig = defineConfig([
     rules: { 'react/function-component-definition': 'off' },
   },
 
+  {
+    // yoga and envelop plugins are named use, but they arent React hooks
+    files: ['lib/graphql/**/*.ts'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
+    },
+  },
+
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
@@ -148,6 +157,7 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
+    'lib/graphql/generated/**',
   ]),
 ])
 

@@ -1,11 +1,12 @@
 import { listStudioCourses } from '@/lib/server/courses'
+import type { Resolvers } from './generated/resolvers'
 
-export const resolvers = {
+export const resolvers: Resolvers = {
   Query: {
     studioCourses: () => listStudioCourses(),
   },
   Course: {
-    updatedAt: (course: { updatedAt: Date }) => course.updatedAt.toISOString(),
+    updatedAt: (course) => course.updatedAt.toISOString(),
   },
   CourseStatus: {
     DRAFT: 'draft',

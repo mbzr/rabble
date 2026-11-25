@@ -16,7 +16,8 @@
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx db/seed.ts",
     "test": "NODE_ENV=test vitest",
-    "test:run": "NODE_ENV=test vitest run"
+    "test:run": "NODE_ENV=test vitest run",
+    "codegen": "graphql-codegen"
   },
   "lint-staged": {
     "*.{ts,tsx,js,mjs}": [
@@ -28,6 +29,10 @@
   "dependencies": {
     "@base-ui/react": "^1.9.0",
     "@better-auth/drizzle-adapter": "^1.7.15",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@graphql-yoga/plugin-csrf-prevention": "^4.1.1",
+    "@graphql-yoga/plugin-disable-introspection": "^3.1.1",
+    "@graphql-yoga/plugin-persisted-operations": "^4.1.1",
     "@mux/mux-player-react": "^3.14.1",
     "@mux/ts": "^16.2.0",
     "@vercel/functions": "^3.11.1",
@@ -50,6 +55,10 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^8.0.0",
+    "@graphql-codegen/client-preset": "^7.0.0",
+    "@graphql-codegen/typescript": "^7.0.1",
+    "@graphql-codegen/typescript-resolvers": "^7.0.1",
     "@tailwindcss/turbopack": "^4",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",

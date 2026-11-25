@@ -114,7 +114,7 @@ const LessonVideo = async ({ course, lesson }: LessonVideoProps) => {
 
 const LessonPage = async ({ params }: LessonPageProps) => {
   const { slug, lessonSlug } = await params
-  const [found, t, tCourse, tCatalog] = await Promise.all([
+  const [found] = await Promise.all([
     findLesson(slug, lessonSlug),
     getTranslations('Lesson'),
     getTranslations('Course'),
