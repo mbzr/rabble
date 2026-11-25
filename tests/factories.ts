@@ -5,6 +5,7 @@ import { courses } from '@/db/schema/courses'
 import { lessons } from '@/db/schema/lessons'
 import { videos } from '@/db/schema/videos'
 import { enrolments } from '@/db/schema/enrolments'
+import { instructors } from '@/db/schema/instructors'
 
 export const createUser = async (
   values: Partial<typeof user.$inferInsert> = {},
@@ -29,12 +30,16 @@ interface CreateCourseParams extends Partial<typeof courses.$inferInsert> {
   owner: {
     id: string
   }
+  instructor?: { id: string }
 }
 
 export const createCourse = async ({
   owner,
+  instructor,
   ...values
 }: CreateCourseParams) => {
+  const credited = instructor ?? (await createInstructor())
+
   const result = await db
     .insert(courses)
     .values({
@@ -48,6 +53,7 @@ export const createCourse = async ({
       access: 'free',
       status: 'published',
       publishedAt: new Date(),
+      instructorId: credited.id,
       ...values,
     })
     .returning()
@@ -118,5 +124,18 @@ export const createEnrolment = async ({
 
   const row = result[0]
   if (!row) throw new Error('insert returned no enrolment')
+  return row
+}
+
+export const createInstructor = async (
+  values: Partial<typeof instructors.$inferInsert> = {},
+) => {
+  const result = await db
+    .insert(instructors)
+    .values({ name: 'Test instructor', ...values })
+    .returning()
+
+  const row = result[0]
+  if (!row) throw new Error('insert returned no instructor')
   return row
 }

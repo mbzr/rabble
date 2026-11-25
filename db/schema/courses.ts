@@ -17,6 +17,7 @@ import {
   COURSE_STATUSES,
 } from '@/lib/schemas/course'
 import { sqlList } from '@/db/sql-list'
+import { instructors } from './instructors'
 
 export const courses = pgTable(
   'courses',
@@ -25,6 +26,11 @@ export const courses = pgTable(
     ownerId: uuid('owner_id')
       .notNull()
       .references(() => user.id, {
+        onDelete: 'restrict',
+      }),
+    instructorId: uuid('instructor_id')
+      .notNull()
+      .references(() => instructors.id, {
         onDelete: 'restrict',
       }),
     slug: text('slug').unique().notNull(),

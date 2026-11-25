@@ -1,9 +1,11 @@
 import { loadEnvConfig } from '@next/env'
 import { logError } from '@/lib/log'
+import { instructors } from './schema/instructors'
 
 loadEnvConfig(process.cwd())
 
 const SEED_INSTRUCTOR_ID = '00000000-0000-4000-8000-0000000000a1'
+const SEED_CREDIT_ID = '00000000-0000-4000-8000-0000000000b1'
 
 const seedId = (n: number) =>
   `00000000-0000-4000-8000-${n.toString().padStart(12, '0')}`
@@ -73,6 +75,15 @@ const seed = async () => {
       .onConflictDoNothing()
 
     await db
+      .insert(instructors)
+      .values({
+        id: SEED_CREDIT_ID,
+        name: 'Instructor name',
+        userId: SEED_INSTRUCTOR_ID,
+      })
+      .onConflictDoNothing()
+
+    await db
       .insert(courses)
       .values([
         {
@@ -88,6 +99,7 @@ const seed = async () => {
           access: 'free',
           status: 'published',
           publishedAt: new Date('2026-11-02T09:00:00Z'),
+          instructorId: SEED_CREDIT_ID,
         },
         {
           id: '00000000-0000-4000-8000-000000000002',
@@ -102,6 +114,7 @@ const seed = async () => {
           access: 'premium',
           status: 'published',
           publishedAt: new Date('2026-11-03T09:00:00Z'),
+          instructorId: SEED_CREDIT_ID,
         },
         {
           id: '00000000-0000-4000-8000-000000000003',
@@ -116,6 +129,7 @@ const seed = async () => {
           access: 'premium',
           status: 'published',
           publishedAt: new Date('2026-11-04T09:00:00Z'),
+          instructorId: SEED_CREDIT_ID,
         },
       ])
       .onConflictDoNothing()

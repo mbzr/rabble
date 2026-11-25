@@ -14,9 +14,9 @@ import { courses } from '@/db/schema/courses'
 import { lessons } from '@/db/schema/lessons'
 import { db } from '@/db'
 import { videos } from '@/db/schema/videos'
-import { user } from '@/db/schema/auth'
 import { requireRole, requireUser } from './current-user'
 import { enrolments } from '@/db/schema/enrolments'
+import { instructors } from '@/db/schema/instructors'
 
 export interface CourseSummary {
   id: string
@@ -70,12 +70,12 @@ const selectCourseSummaries = () => {
       language: courses.language,
       level: courses.level,
       access: courses.access,
-      instructorName: user.name,
+      instructorName: instructors.name,
       lessonCount: lessonTotals.lessonCount,
       durationSeconds: lessonTotals.durationSeconds,
     })
     .from(courses)
-    .innerJoin(user, eq(user.id, courses.ownerId))
+    .innerJoin(instructors, eq(instructors.id, courses.instructorId))
     .leftJoin(lessonTotals, eq(lessonTotals.courseId, courses.id))
 }
 
@@ -162,10 +162,10 @@ export const getCourseBySlug = async (
       language: courses.language,
       level: courses.level,
       access: courses.access,
-      instructorName: user.name,
+      instructorName: instructors.name,
     })
     .from(courses)
-    .innerJoin(user, eq(user.id, courses.ownerId))
+    .innerJoin(instructors, eq(instructors.id, courses.instructorId))
     .where(and(eq(courses.slug, slug), isInCatalog))
 
   if (!course) return null

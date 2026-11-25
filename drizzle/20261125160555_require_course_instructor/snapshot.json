@@ -1,0 +1,29 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "4656a44a-fc1a-4ca2-9041-53448410be0d",
+  "prevIds": ["720d938c-39cb-4762-9297-70496fa6f852"],
+  "footprints": [
+    {
+      "statementType": "alter_column",
+      "statementTarget": ["column", "public", "courses", "instructor_id"],
+      "writes": ["s|colprop|public.courses.instructor_id.notNull"],
+      "reads": [
+        "n|tbl|public.courses",
+        "n|sch|public",
+        "n|col|public.courses.instructor_id"
+      ],
+      "sqlHash": "108d4fa22db96c78"
+    }
+  ],
+  "deltas": [
+    {
+      "op": "alter",
+      "key": "columns\u0000[\"public\",\"courses\",\"instructor_id\"]",
+      "set": {
+        "notNull": true
+      }
+    }
+  ]
+}

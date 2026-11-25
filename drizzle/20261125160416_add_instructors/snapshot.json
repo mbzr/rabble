@@ -1,0 +1,217 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "ae5d4d78-ed19-4c1c-bb7b-3979938c70a9",
+  "prevIds": ["7e22a907-7f65-4eb3-a3b1-8f07d2bb24d9"],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": ["table", "public", "instructors"],
+      "writes": [
+        "s|tbl|public.instructors",
+        "n|tbl|public.instructors",
+        "e|tbl|public.instructors",
+        "n|rel|public.instructors",
+        "n|type|public.instructors",
+        "n|rel|public.instructors_pkey",
+        "n|rel|public.instructors_user_id_key"
+      ],
+      "reads": ["n|sch|public"]
+    },
+    {
+      "statementType": "add_column",
+      "statementTarget": ["column", "public", "courses", "instructor_id"],
+      "writes": [
+        "s|col|public.courses.instructor_id",
+        "n|col|public.courses.instructor_id",
+        "e|col|public.courses.instructor_id"
+      ],
+      "reads": ["n|tbl|public.courses", "n|sch|public"]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "courses"],
+      "writes": [
+        "s|fk|public.courses.courses_instructor_id_instructors_id_fkey",
+        "n|fk|public.courses.courses_instructor_id_instructors_id_fkey",
+        "e|fk|public.courses.courses_instructor_id_instructors_id_fkey",
+        "n|con|public.courses.courses_instructor_id_instructors_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.courses",
+        "n|sch|public",
+        "n|tbl|public.instructors",
+        "n|sch|public",
+        "n|col|public.courses.instructor_id",
+        "n|col|public.instructors.id",
+        "e|uniqueness|public.instructors.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": ["table", "public", "instructors"],
+      "writes": [
+        "s|fk|public.instructors.instructors_user_id_user_id_fkey",
+        "n|fk|public.instructors.instructors_user_id_user_id_fkey",
+        "e|fk|public.instructors.instructors_user_id_user_id_fkey",
+        "n|con|public.instructors.instructors_user_id_user_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.instructors",
+        "n|sch|public",
+        "n|tbl|public.user",
+        "n|sch|public",
+        "n|col|public.instructors.user_id",
+        "n|col|public.user.id",
+        "e|uniqueness|public.user.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "instructors",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "courses",
+        "name": "instructor_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "instructors",
+        "name": "id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "gen_random_uuid()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "instructors",
+        "name": "name",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "instructors",
+        "name": "user_id",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "instructors",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "courses",
+        "name": "courses_instructor_id_instructors_id_fkey",
+        "nameExplicit": false,
+        "columns": ["instructor_id"],
+        "schemaTo": "public",
+        "tableTo": "instructors",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "RESTRICT",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "instructors",
+        "name": "instructors_user_id_user_id_fkey",
+        "nameExplicit": false,
+        "columns": ["user_id"],
+        "schemaTo": "public",
+        "tableTo": "user",
+        "columnsTo": ["id"],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "instructors",
+        "name": "instructors_pkey",
+        "columns": ["id"],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "instructors",
+        "name": "instructors_user_id_key",
+        "nameExplicit": false,
+        "columns": ["user_id"],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    }
+  ]
+}
