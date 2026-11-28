@@ -1,6 +1,6 @@
-import { yoga } from '@/lib/graphql/yoga'
 import { signInAs, signOut } from '@/tests/auth'
 import { createCourse, createUser } from '@/tests/factories'
+import { executeGraphQL } from '@/tests/graphql'
 import { afterEach, describe, expect, test } from 'vitest'
 
 const STUDIO_COURSES = /* GraphQL */ `
@@ -11,15 +11,6 @@ const STUDIO_COURSES = /* GraphQL */ `
     }
   }
 `
-
-const execute = async (query: string) => {
-  const response = await yoga.fetch('http://localhost/api/graphql', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ query }),
-  })
-  return response.json()
-}
 
 describe('studioCourses', () => {
   afterEach(() => signOut())
@@ -32,7 +23,7 @@ describe('studioCourses', () => {
 
     await signInAs(instructor)
 
-    expect(await execute(STUDIO_COURSES)).toEqual({
+    expect(await executeGraphQL(STUDIO_COURSES)).toEqual({
       data: { studioCourses: [{ id: mine.id, status: 'DRAFT' }] },
     })
   })
@@ -40,13 +31,13 @@ describe('studioCourses', () => {
   test('a learner is forbidden', async () => {
     await signInAs(await createUser())
 
-    const result = await execute(STUDIO_COURSES)
+    const result = await executeGraphQL(STUDIO_COURSES)
 
     expect(result.errors[0].extensions.code).toBe('FORBIDDEN')
   })
 
   test('a visitor is unauthenticated', async () => {
-    const result = await execute(STUDIO_COURSES)
+    const result = await executeGraphQL(STUDIO_COURSES)
 
     expect(result.errors[0].extensions.code).toBe('UNAUTHENTICATED')
   })

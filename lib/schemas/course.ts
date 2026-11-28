@@ -29,3 +29,20 @@ export const catalogFiltersSchema = z.object({
 })
 
 export type CatalogFilters = z.infer<typeof catalogFiltersSchema>
+
+// lowercase words joined by single hyphens, like "ui-design-fundamentals"
+export const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+
+export const courseDetailsSchema = z.object({
+  title: z.string().trim().min(3).max(120),
+  slug: z.string().trim().min(3).max(80).regex(SLUG_PATTERN),
+  description: z.string().trim().max(2000),
+  category: z.enum(COURSE_CATEGORIES),
+  language: z.enum(COURSE_LANGUAGES),
+  level: z.enum(COURSE_LEVELS),
+  access: z.enum(COURSE_ACCESS),
+  // admins choose who is credited. Ignored for instructors, who are credited to themselves
+  instructorId: z.uuid().optional(),
+})
+
+export type CourseDetailsInput = z.infer<typeof courseDetailsSchema>

@@ -16,10 +16,22 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
 type Documents = {
     "\n  fragment StudioCourseRow on Course {\n    id\n    title\n    status\n    access\n    lessonCount\n    enrolmentCount\n    updatedAt\n  }\n": typeof types.StudioCourseRowFragmentDoc,
     "\n  query StudioCourses {\n    studioCourses {\n      id\n      ...StudioCourseRow\n    }\n  }\n": typeof types.StudioCoursesDocument,
+    "\n  fragment CourseEditorFields on Course {\n    id\n    slug\n    title\n    description\n    category\n    language\n    level\n    access\n    status\n    instructor {\n      id\n      name\n    }\n  }\n": typeof types.CourseEditorFieldsFragmentDoc,
+    "\n  query CourseEditor($id: ID!) {\n    studioCourse(id: $id) {\n      id\n      ...CourseEditorFields\n    }\n  }\n": typeof types.CourseEditorDocument,
+    "\n  query Instructors {\n    instructors {\n      id\n      name\n    }\n  }\n": typeof types.InstructorsDocument,
+    "\n  mutation CreateCourse($input: CourseDetailsInput!) {\n    createCourse(input: $input) {\n      id\n      ...CourseEditorFields\n      ...StudioCourseRow\n    }\n  }\n": typeof types.CreateCourseDocument,
+    "\n  mutation UpdateCourse($id: ID!, $input: CourseDetailsInput!) {\n    updateCourse(id: $id, input: $input) {\n      id\n      ...CourseEditorFields\n      ...StudioCourseRow\n    }\n  }\n": typeof types.UpdateCourseDocument,
+    "\n  mutation CreateInstructor($name: String!) {\n    createInstructor(name: $name) {\n      id\n      name\n    }\n  }\n": typeof types.CreateInstructorDocument,
 };
 const documents: Documents = {
     "\n  fragment StudioCourseRow on Course {\n    id\n    title\n    status\n    access\n    lessonCount\n    enrolmentCount\n    updatedAt\n  }\n": types.StudioCourseRowFragmentDoc,
     "\n  query StudioCourses {\n    studioCourses {\n      id\n      ...StudioCourseRow\n    }\n  }\n": types.StudioCoursesDocument,
+    "\n  fragment CourseEditorFields on Course {\n    id\n    slug\n    title\n    description\n    category\n    language\n    level\n    access\n    status\n    instructor {\n      id\n      name\n    }\n  }\n": types.CourseEditorFieldsFragmentDoc,
+    "\n  query CourseEditor($id: ID!) {\n    studioCourse(id: $id) {\n      id\n      ...CourseEditorFields\n    }\n  }\n": types.CourseEditorDocument,
+    "\n  query Instructors {\n    instructors {\n      id\n      name\n    }\n  }\n": types.InstructorsDocument,
+    "\n  mutation CreateCourse($input: CourseDetailsInput!) {\n    createCourse(input: $input) {\n      id\n      ...CourseEditorFields\n      ...StudioCourseRow\n    }\n  }\n": types.CreateCourseDocument,
+    "\n  mutation UpdateCourse($id: ID!, $input: CourseDetailsInput!) {\n    updateCourse(id: $id, input: $input) {\n      id\n      ...CourseEditorFields\n      ...StudioCourseRow\n    }\n  }\n": types.UpdateCourseDocument,
+    "\n  mutation CreateInstructor($name: String!) {\n    createInstructor(name: $name) {\n      id\n      name\n    }\n  }\n": types.CreateInstructorDocument,
 };
 
 /**
@@ -44,6 +56,30 @@ export function graphql(source: "\n  fragment StudioCourseRow on Course {\n    i
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  query StudioCourses {\n    studioCourses {\n      id\n      ...StudioCourseRow\n    }\n  }\n"): (typeof documents)["\n  query StudioCourses {\n    studioCourses {\n      id\n      ...StudioCourseRow\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  fragment CourseEditorFields on Course {\n    id\n    slug\n    title\n    description\n    category\n    language\n    level\n    access\n    status\n    instructor {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  fragment CourseEditorFields on Course {\n    id\n    slug\n    title\n    description\n    category\n    language\n    level\n    access\n    status\n    instructor {\n      id\n      name\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query CourseEditor($id: ID!) {\n    studioCourse(id: $id) {\n      id\n      ...CourseEditorFields\n    }\n  }\n"): (typeof documents)["\n  query CourseEditor($id: ID!) {\n    studioCourse(id: $id) {\n      id\n      ...CourseEditorFields\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query Instructors {\n    instructors {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  query Instructors {\n    instructors {\n      id\n      name\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation CreateCourse($input: CourseDetailsInput!) {\n    createCourse(input: $input) {\n      id\n      ...CourseEditorFields\n      ...StudioCourseRow\n    }\n  }\n"): (typeof documents)["\n  mutation CreateCourse($input: CourseDetailsInput!) {\n    createCourse(input: $input) {\n      id\n      ...CourseEditorFields\n      ...StudioCourseRow\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdateCourse($id: ID!, $input: CourseDetailsInput!) {\n    updateCourse(id: $id, input: $input) {\n      id\n      ...CourseEditorFields\n      ...StudioCourseRow\n    }\n  }\n"): (typeof documents)["\n  mutation UpdateCourse($id: ID!, $input: CourseDetailsInput!) {\n    updateCourse(id: $id, input: $input) {\n      id\n      ...CourseEditorFields\n      ...StudioCourseRow\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation CreateInstructor($name: String!) {\n    createInstructor(name: $name) {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateInstructor($name: String!) {\n    createInstructor(name: $name) {\n      id\n      name\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

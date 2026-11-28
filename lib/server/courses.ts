@@ -1,9 +1,10 @@
 import 'server-only'
 
-import { cacheTag } from 'next/cache'
+import { cacheTag, revalidateTag } from 'next/cache'
 import { and, asc, count, desc, eq, not, sum } from 'drizzle-orm'
 import {
   COURSE_CATEGORIES,
+  courseDetailsSchema,
   type CatalogFilters,
   type CourseAccess,
   type CourseCategory,
@@ -14,9 +15,13 @@ import { courses } from '@/db/schema/courses'
 import { lessons } from '@/db/schema/lessons'
 import { db } from '@/db'
 import { videos } from '@/db/schema/videos'
-import { requireRole, requireUser } from './current-user'
+import { CurrentUser, requireRole, requireUser } from './current-user'
 import { enrolments } from '@/db/schema/enrolments'
 import { instructors } from '@/db/schema/instructors'
+import { ForbiddenError, NotFoundError, ValidationError } from './errors'
+import { resolveCourseInstructor } from './instructors'
+import { canEditCourse } from './policies'
+import { z } from 'zod'
 
 export interface CourseSummary {
   id: string
@@ -228,18 +233,23 @@ export const listCatalogLessonPaths = async () => {
     .where(and(isInCatalog, eq(lessons.status, 'published')))
 }
 
-// the studio dashboard: your courses, or every course if you are an admin, most recently edited first
-export const listStudioCourses = async () => {
-  const currentUser = await requireRole('instructor', 'admin')
-
-  return db
+// the fields the studio shows and edits
+const selectStudioCourses = () =>
+  db
     .select({
       id: courses.id,
+      ownerId: courses.ownerId,
       slug: courses.slug,
       title: courses.title,
-      status: courses.status,
+      description: courses.description,
+      category: courses.category,
+      language: courses.language,
+      level: courses.level,
       access: courses.access,
+      status: courses.status,
       updatedAt: courses.updatedAt,
+      instructorId: courses.instructorId,
+      instructorName: instructors.name,
       lessonCount: db.$count(lessons, eq(lessons.courseId, courses.id)),
       enrolmentCount: db.$count(
         enrolments,
@@ -247,6 +257,13 @@ export const listStudioCourses = async () => {
       ),
     })
     .from(courses)
+    .innerJoin(instructors, eq(instructors.id, courses.instructorId))
+
+// the studio dashboard: your courses, or every course for an admin, most recently edited first
+export const listStudioCourses = async () => {
+  const currentUser = await requireRole('instructor', 'admin')
+
+  return selectStudioCourses()
     .where(
       currentUser.role === 'admin'
         ? not(courses.isSandbox)
@@ -256,3 +273,100 @@ export const listStudioCourses = async () => {
 }
 
 export type StudioCourse = Awaited<ReturnType<typeof listStudioCourses>>[number]
+
+// A course you may edit. Audit #3: only its owner or an admin
+const loadEditableCourse = async (
+  currentUser: CurrentUser,
+  courseId: string,
+) => {
+  if (!z.uuid().safeParse(courseId).success) {
+    throw new NotFoundError('Course not found')
+  }
+
+  const [course] = await selectStudioCourses().where(eq(courses.id, courseId))
+  if (!course) throw new NotFoundError('Course not found')
+  if (!canEditCourse(currentUser, course)) throw new ForbiddenError()
+
+  return course
+}
+
+export const getStudioCourse = async (courseId: string) =>
+  loadEditableCourse(await requireUser(), courseId)
+
+const parseCourseDetails = (input: unknown) => {
+  const parsed = courseDetailsSchema.safeParse(input)
+  if (!parsed.success) {
+    throw new ValidationError(
+      Object.fromEntries(
+        parsed.error.issues.map((issue) => [issue.path.join('.'), issue.code]),
+      ),
+    )
+  }
+  return parsed.data
+}
+
+// postgres reports a duplicate slug as a unique violation, code 23505
+const isUniqueViolation = (error: unknown) =>
+  error instanceof Error &&
+  (error.cause as { code?: string } | undefined)?.code === '23505'
+
+// only instructors and admins create courses. Every new course starts as a draft
+export const createCourse = async (input: unknown) => {
+  const currentUser = await requireRole('instructor', 'admin')
+  const { instructorId, ...details } = parseCourseDetails(input)
+  const creditedId = await resolveCourseInstructor(currentUser, instructorId)
+
+  try {
+    const [created] = await db
+      .insert(courses)
+      .values({
+        ...details,
+        ownerId: currentUser.id,
+        instructorId: creditedId,
+        status: 'draft',
+        isSandbox: currentUser.isDemo,
+      })
+      .returning({ id: courses.id })
+    if (!created) throw new Error('insert returned no course')
+
+    return loadEditableCourse(currentUser, created.id)
+  } catch (error) {
+    if (isUniqueViolation(error)) throw new ValidationError({ slug: 'taken' })
+    throw error
+  }
+}
+
+export const updateCourse = async (courseId: string, input: unknown) => {
+  const currentUser = await requireUser()
+  const course = await loadEditableCourse(currentUser, courseId)
+  const { instructorId, ...details } = parseCourseDetails(input)
+
+  // published links never break, the slug only changes while the course is a draft
+  if (details.slug !== course.slug && course.status !== 'draft') {
+    throw new ValidationError({ slug: 'locked' })
+  }
+
+  const values = {
+    ...details,
+    // admins can change who is credited. Instructors keep their own credit
+    ...(currentUser.role === 'admin' &&
+      instructorId && {
+        instructorId: await resolveCourseInstructor(currentUser, instructorId),
+      }),
+  }
+
+  try {
+    await db.update(courses).set(values).where(eq(courses.id, courseId))
+  } catch (error) {
+    if (isUniqueViolation(error)) throw new ValidationError({ slug: 'taken' })
+    throw error
+  }
+
+  // learners see published courses, so refresh their cached pages now
+  if (course.status === 'published') {
+    revalidateTag('catalog', { expire: 0 })
+    revalidateTag(`course:${courseId}`, { expire: 0 })
+  }
+
+  return loadEditableCourse(currentUser, courseId)
+}

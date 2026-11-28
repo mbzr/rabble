@@ -15,6 +15,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { type FragmentType, useFragment } from '@/lib/graphql/generated/client'
 import { StudioCourseRowFragment, StudioCoursesQuery } from './queries'
+import { Link } from '@/i18n/navigation'
 
 interface StudioCourseRowProps {
   course: FragmentType<typeof StudioCourseRowFragment>
@@ -27,9 +28,13 @@ const StudioCourseRow = ({ course: courseRef }: StudioCourseRowProps) => {
 
   return (
     <li className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:gap-4">
-      <span className="flex-1 font-medium" dir="auto">
+      <Link
+        href={`/studio/courses/${course.id}`}
+        className="flex-1 font-medium underline-offset-4 hover:underline"
+        dir="auto"
+      >
         {course.title}
-      </span>
+      </Link>
       <div className="flex flex-wrap items-center gap-2 text-sm">
         <Badge variant={course.status === 'PUBLISHED' ? 'default' : 'outline'}>
           {t(`status.${course.status}`)}
@@ -51,7 +56,7 @@ const StudioCourseRow = ({ course: courseRef }: StudioCourseRowProps) => {
 
 export const StudioCourses = () => {
   const t = useTranslations('Studio')
-  // The studio fetches in the browser. The server only renders the loading state
+  // the studio fetches in the browser. The server only renders the loading state
   const { data, loading, error } = useQuery(StudioCoursesQuery, { ssr: false })
 
   if (loading) {

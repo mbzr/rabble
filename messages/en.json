@@ -180,5 +180,38 @@
   "Pricing": {
     "title": "Pricing",
     "placeholder": "The pricing page will appear here."
+  },
+  "CourseForm": {
+    "newTitle": "New course",
+    "editTitle": "Edit course",
+    "title": "Title",
+    "slug": "Web address",
+    "slugHint": "Lowercase letters, numbers and hyphens. Used in the course's link.",
+    "slugLocked": "The address can't change after publishing, so existing links keep working.",
+    "description": "Description",
+    "category": "Category",
+    "language": "Language",
+    "level": "Level",
+    "access": "Free or Premium",
+    "instructor": "Instructor",
+    "chooseInstructor": "Choose an instructor",
+    "newInstructorName": "Or add a new instructor",
+    "addInstructor": "Add",
+    "create": "Create course",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "loadError": "This course couldn't be loaded.",
+    "errors": {
+      "too_small": "This is too short.",
+      "too_big": "This is too long.",
+      "invalid_format": "Use lowercase letters, numbers and hyphens.",
+      "invalid_value": "Choose one of the options.",
+      "taken": "Another course already uses this.",
+      "locked": "This can't change after publishing.",
+      "required": "Choose one.",
+      "not_found": "That no longer exists. Choose again.",
+      "unexpected": "Something went wrong. Try again."
+    }
   }
 }

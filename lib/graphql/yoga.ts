@@ -4,7 +4,11 @@ import { createSchema, createYoga, maskError } from 'graphql-yoga'
 import { useCSRFPrevention } from '@graphql-yoga/plugin-csrf-prevention'
 import { usePersistedOperations } from '@graphql-yoga/plugin-persisted-operations'
 import { useDisableIntrospection } from '@graphql-yoga/plugin-disable-introspection'
-import { toErrorCode } from '@/lib/server/errors'
+import {
+  type AppErrorCode,
+  toErrorCode,
+  ValidationError,
+} from '@/lib/server/errors'
 import { resolvers } from './resolvers'
 import { typeDefs } from './type-defs'
 import persistedDocuments from './generated/client/persisted-documents.json'
@@ -15,6 +19,13 @@ const documents: Record<string, string> = persistedDocuments
 
 interface GraphQLServerOptions {
   isProduction: boolean
+}
+
+const GRAPHQL_CODES: Record<AppErrorCode, string> = {
+  unauthenticated: 'UNAUTHENTICATED',
+  forbidden: 'FORBIDDEN',
+  not_found: 'NOT_FOUND',
+  invalid_input: 'BAD_USER_INPUT',
 }
 
 export const createGraphQLServer = ({ isProduction }: GraphQLServerOptions) => {
@@ -33,7 +44,13 @@ export const createGraphQLServer = ({ isProduction }: GraphQLServerOptions) => {
         const code = toErrorCode(original)
         if (code && original instanceof Error) {
           return new GraphQLError(original.message, {
-            extensions: { code: code.toUpperCase() },
+            extensions: {
+              code: GRAPHQL_CODES[code],
+              // the course form puts these under the matching fields
+              ...(original instanceof ValidationError && {
+                fieldErrors: original.fieldErrors,
+              }),
+            },
           })
         }
         return maskError(error, message, isDev)

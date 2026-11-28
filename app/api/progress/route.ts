@@ -11,6 +11,7 @@ const STATUS: Record<AppErrorCode, number> = {
   unauthenticated: 401,
   forbidden: 403,
   not_found: 404,
+  invalid_input: 400,
 }
 
 export const POST = async (request: Request) => {
